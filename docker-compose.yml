@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: urbandiscount
+      POSTGRES_PASSWORD: urbandiscount
+      POSTGRES_DB: urbandiscount
+    ports:
+      - "5433:5432"
+    volumes:
+      - urbandiscount_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U urbandiscount"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+volumes:
+  urbandiscount_db:
