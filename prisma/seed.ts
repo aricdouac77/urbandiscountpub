@@ -84,6 +84,13 @@ const CATEGORIES: SeedCategory[] = [
     description: "Sacs, casquettes et petite maroquinerie.",
     descriptionEn: "Bags, caps and small leather goods.",
   },
+  {
+    name: "Chaussures",
+    nameEn: "Shoes",
+    slug: "chaussures",
+    description: "Mocassins, derbies et souliers en cuir.",
+    descriptionEn: "Loafers, derbies and leather shoes.",
+  },
 ];
 
 const COLLECTIONS = [
@@ -642,6 +649,307 @@ const PRODUCTS: SeedProduct[] = [
     descriptionEn: "Set of 3 pairs of socks in reinforced combed cotton, mid-calf length.",
   },
 ];
+
+// ────────────────────────────────────────────────────────────
+// Import en masse — collection "Ensembles & vêtements homme"
+// ────────────────────────────────────────────────────────────
+
+type ProductKind =
+  | "sweatshirt"
+  | "hoodie"
+  | "jacket"
+  | "tee"
+  | "polo"
+  | "denim-shirt"
+  | "shirt"
+  | "jean"
+  | "denim-pant"
+  | "denim-short"
+  | "chino-short"
+  | "chino-pant"
+  | "jogger"
+  | "cargo"
+  | "set"
+  | "loafer";
+
+const KIND_TEMPLATES: Record<
+  ProductKind,
+  { category: string; sizes: string[]; fr: string; en: string; materialFr: string; materialEn: string }
+> = {
+  sweatshirt: {
+    category: "vetements-hauts",
+    sizes: APPAREL_SIZES,
+    fr: "Sweat en molleton doux, coupe confortable pour un usage quotidien.",
+    en: "Sweatshirt in soft fleece, comfortable fit for everyday wear.",
+    materialFr: "Molleton coton",
+    materialEn: "Cotton fleece",
+  },
+  hoodie: {
+    category: "vetements-hauts",
+    sizes: APPAREL_SIZES,
+    fr: "Hoodie coupe slim en molleton doux, capuche doublée et poche kangourou.",
+    en: "Slim-fit hoodie in soft fleece, lined hood and kangaroo pocket.",
+    materialFr: "Molleton gratté",
+    materialEn: "Brushed fleece",
+  },
+  jacket: {
+    category: "vetements-hauts",
+    sizes: APPAREL_SIZES,
+    fr: "Veste en suédine, doublure intérieure et coupe structurée pour la mi-saison.",
+    en: "Faux suede jacket, inner lining and structured fit for mid-season wear.",
+    materialFr: "Suédine, doublure intérieure",
+    materialEn: "Faux suede, inner lining",
+  },
+  tee: {
+    category: "vetements-hauts",
+    sizes: APPAREL_SIZES,
+    fr: "T-shirt oversize imprimé, coton doux et coupe décontractée.",
+    en: "Printed oversize t-shirt, soft cotton and relaxed fit.",
+    materialFr: "Coton peigné",
+    materialEn: "Combed cotton",
+  },
+  polo: {
+    category: "vetements-hauts",
+    sizes: APPAREL_SIZES,
+    fr: "Polo en piqué de coton, coupe ajustée pour un look soigné.",
+    en: "Cotton piqué polo, fitted cut for a polished look.",
+    materialFr: "Piqué de coton",
+    materialEn: "Cotton piqué",
+  },
+  "denim-shirt": {
+    category: "vetements-hauts",
+    sizes: APPAREL_SIZES,
+    fr: "Chemise en denim souple, coupe droite, boutonnage complet.",
+    en: "Soft denim shirt, straight fit, full button-through front.",
+    materialFr: "Denim souple",
+    materialEn: "Soft denim",
+  },
+  shirt: {
+    category: "vetements-hauts",
+    sizes: APPAREL_SIZES,
+    fr: "Chemise coupe ajustée, tissu premium respirant.",
+    en: "Fitted shirt, premium breathable fabric.",
+    materialFr: "Tissu premium",
+    materialEn: "Premium fabric",
+  },
+  jean: {
+    category: "vetements-bas",
+    sizes: ["38", "40", "42", "44", "46"],
+    fr: "Jean coupe slim, denim stretch pour plus de liberté de mouvement.",
+    en: "Slim-fit jeans, stretch denim for ease of movement.",
+    materialFr: "Denim stretch",
+    materialEn: "Stretch denim",
+  },
+  "denim-pant": {
+    category: "vetements-bas",
+    sizes: ["38", "40", "42", "44", "46"],
+    fr: "Pantalon en denim, coupe droite et finitions soignées.",
+    en: "Denim pants, straight cut and clean finishing.",
+    materialFr: "Denim",
+    materialEn: "Denim",
+  },
+  "denim-short": {
+    category: "vetements-bas",
+    sizes: ["38", "40", "42", "44"],
+    fr: "Short en denim, coupe décontractée pour les journées chaudes.",
+    en: "Denim shorts, relaxed fit for warm days.",
+    materialFr: "Denim",
+    materialEn: "Denim",
+  },
+  "chino-short": {
+    category: "vetements-bas",
+    sizes: ["38", "40", "42", "44"],
+    fr: "Short chino en coton, coupe droite, ceinture ajustable.",
+    en: "Cotton chino shorts, straight fit, adjustable waist.",
+    materialFr: "Coton",
+    materialEn: "Cotton",
+  },
+  "chino-pant": {
+    category: "vetements-bas",
+    sizes: ["38", "40", "42", "44", "46"],
+    fr: "Pantalon chino en coton, coupe droite, polyvalent du bureau au weekend.",
+    en: "Cotton chino pants, straight fit, versatile from office to weekend.",
+    materialFr: "Coton",
+    materialEn: "Cotton",
+  },
+  jogger: {
+    category: "vetements-bas",
+    sizes: ["38", "40", "42", "44", "46"],
+    fr: "Jogger coupe fuselée, taille élastiquée et poches zippées.",
+    en: "Tapered joggers, elastic waistband and zip pockets.",
+    materialFr: "Molleton technique",
+    materialEn: "Technical fleece",
+  },
+  cargo: {
+    category: "vetements-bas",
+    sizes: ["38", "40", "42", "44", "46"],
+    fr: "Pantalon cargo multipoches, coupe relâchée, tissu résistant.",
+    en: "Multi-pocket cargo pants, relaxed fit, durable fabric.",
+    materialFr: "Coton ripstop",
+    materialEn: "Ripstop cotton",
+  },
+  set: {
+    category: "vetements-ensembles",
+    sizes: APPAREL_SIZES,
+    fr: "Ensemble coordonné imprimé, haut et bas assortis pour un look complet.",
+    en: "Printed coordinated set, matching top and bottom for a complete look.",
+    materialFr: "Coton imprimé",
+    materialEn: "Printed cotton",
+  },
+  loafer: {
+    category: "chaussures",
+    sizes: SHOE_SIZES,
+    fr: "Mocassin en suède naturel, semelle souple et légère.",
+    en: "Natural suede loafer, flexible and lightweight sole.",
+    materialFr: "Suède naturel",
+    materialEn: "Natural suede",
+  },
+};
+
+type RawImportItem = {
+  title: string;
+  titleEn: string;
+  kind: ProductKind;
+  priceAED: number;
+  discountPct?: number;
+  image: string;
+};
+
+function slugify(title: string) {
+  return title
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function toEuroPrice(priceAED: number) {
+  const rounded = Math.floor(priceAED) + (priceAED % 1 >= 0.5 ? 0.5 : 0) || priceAED;
+  return Number.isInteger(rounded) ? rounded - 0.1 : rounded;
+}
+
+const RAW_IMPORT: RawImportItem[] = [
+  { title: "Mocassin Old Money en Suède", titleEn: "Old Money Suede Loafers", kind: "loafer", priceAED: 145.0, image: "files/IMG_2136.jpg" },
+  { title: "Jean Coupe Slim Cropped - Délavé Vintage", titleEn: "Slim Cropped Fit Jeans - Vintage Wash", kind: "jean", priceAED: 65.5, image: "files/ScreenShot2026-06-07at1.27.16PM.png" },
+  { title: "Short en Jean Homme - Lot de 2", titleEn: "Men Denim Jorts/Shorts - Buy2Get1", kind: "denim-short", priceAED: 65.0, image: "files/FinalDirtyBlue.jpg" },
+
+  { title: "Sweat Parental Advisory - Noir", titleEn: "Parental Advisory Sweatshirt - Black", kind: "sweatshirt", priceAED: 70.0, image: "products/1706.jpg" },
+  { title: "Sweat Imprimé All Over - Bleu Marine", titleEn: "All Over Printed Dark Blue Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/image_c1761983-004f-4ed2-a1e9-ee0e25fdbcb8.jpg" },
+  { title: "Sweat Imprimé All Over - Bordeaux", titleEn: "All Over Printed Maroon Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/1709.jpg" },
+  { title: "Veste en Suédine - Noire", titleEn: "Faux Suede Leather Jacket - Black", kind: "jacket", priceAED: 75.0, image: "products/362.jpg" },
+  { title: "Veste en Suédine - Caramel", titleEn: "Faux Suede Leather Jacket Caramel - 40% Off", kind: "jacket", priceAED: 45.0, discountPct: 40, image: "products/358.jpg" },
+  { title: "Hoodie Slim Fit Vibing On Music", titleEn: "Vibing On Music Slim Fit Hoodie", kind: "hoodie", priceAED: 70.0, image: "products/0508_739539ed-58b5-4fb7-82bb-1c25aeb0af3c.jpg" },
+  { title: "Hoodie Slim Fit Team Green", titleEn: "Team Green Slim Fit Hoodie", kind: "hoodie", priceAED: 65.0, image: "products/0511.jpg" },
+  { title: "Hoodie Slim Fit Black Not Over", titleEn: "Black Not Over Slim Fit Hoodie", kind: "hoodie", priceAED: 65.0, image: "products/0512.jpg" },
+  { title: "Sweat Basique Gris", titleEn: "Basic Sweatshirt Grey", kind: "sweatshirt", priceAED: 65.0, image: "products/0475.jpg" },
+  { title: "Sweat Gris Essentiel", titleEn: "Basic Grey Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/1636.jpg" },
+  { title: "Veste en Suédine - Olive", titleEn: "Faux Suede Leather Jacket - Olive", kind: "jacket", priceAED: 75.0, image: "products/360.jpg" },
+  { title: "Pantalon Chino Vert Olive", titleEn: "Chino Pants Olive Green - 0553", kind: "chino-pant", priceAED: 29.0, image: "products/0553_590c0469-7adf-4d3a-ba40-370a8fa927e1.jpg" },
+  { title: "Pantalon Chino Noir", titleEn: "Chino Pants Black - 0554", kind: "chino-pant", priceAED: 59.0, image: "products/0554.jpg" },
+  { title: "Polo Black Rose", titleEn: "Black Rose Polo Shirt - 0655", kind: "polo", priceAED: 75.0, image: "products/image_4b37ff8d-628f-4db5-8806-23e81641e8ca.jpg" },
+  { title: "Jean Déchiré Bleu Moyen", titleEn: "Mid Blue Ripped Jeans -DEPA.0748", kind: "jean", priceAED: 49.0, image: "products/0748.jpg" },
+  { title: "Jogger Motif Imprimé", titleEn: "Patterned Jogger Trouser", kind: "jogger", priceAED: 85.0, image: "products/c_1.jpg" },
+  { title: "T-Shirt Oversize Col Montant Half Paint", titleEn: "High Neck Oversize Half Paint T-Shirt", kind: "tee", priceAED: 67.0, image: "products/image_1f923fb4-1223-424f-a2bf-a13ff51d8cc8.jpg" },
+  { title: "T-Shirt Oversize Imprimé - Jaune", titleEn: "Oversize Selected Print T-Shirt Yellow - 50% Off", kind: "tee", priceAED: 37.5, discountPct: 50, image: "products/image_0a586e5e-fe0a-44ed-acd2-c6867c50074c.jpg" },
+  { title: "Jogger Zippé Gris Chiné", titleEn: "Heather Grey Zip Slim Fit Jogger Pants", kind: "jogger", priceAED: 75.0, image: "products/0332_e82b4d80-bb0e-4c58-a97b-35b94ad6e697.jpg" },
+
+  { title: "Jean Carrot Bleu Encre", titleEn: "Carrot Blue Jeans Ink Blue - 0228", kind: "jean", priceAED: 67.0, image: "products/0228.jpg" },
+  { title: "Pantalon en Denim - DP230", titleEn: "DP230", kind: "denim-pant", priceAED: 89.0, image: "products/dp230.jpg" },
+  { title: "Pantalon en Denim - DP245", titleEn: "DP245", kind: "denim-pant", priceAED: 65.0, image: "products/Dp245.jpg" },
+  { title: "Jean Gris Foncé", titleEn: "Dark Grey Denim Jeans - 0249", kind: "jean", priceAED: 87.0, image: "products/0249a.jpg" },
+  { title: "Short en Jean Délavé - Noir", titleEn: "Black Faded - Slim Fit Denim Shorts", kind: "denim-short", priceAED: 55.0, image: "products/black.jpg" },
+  { title: "Short en Jean Délavé - Gris", titleEn: "Grey Bleach Wash - Slim Fit Denim Shorts", kind: "denim-short", priceAED: 55.0, image: "products/0279a.jpg" },
+  { title: "Chemise en Denim - Gris", titleEn: "Denim Shirt - Grey", kind: "denim-shirt", priceAED: 75.0, image: "products/0292.jpg" },
+  { title: "Chemise en Denim - Bleu Classique", titleEn: "Denim Shirt - Classic Blue", kind: "denim-shirt", priceAED: 75.0, image: "products/0293.jpg" },
+  { title: "Chemise en Denim - Noire", titleEn: "Denim Shirt - Black", kind: "denim-shirt", priceAED: 75.0, image: "products/0294.jpg" },
+  { title: "Chemise Slim Fit Gris Taupe", titleEn: "Slim Fit Shirt - Mud Grey", kind: "shirt", priceAED: 99.0, image: "products/0305.jpg" },
+  { title: "Chemise en Denim - Bleu Clair", titleEn: "Denim Shirt - Light Blue", kind: "denim-shirt", priceAED: 75.0, image: "products/0370.jpg" },
+  { title: "Chemise en Denim - Bleu Sale", titleEn: "Denim Shirt - Dirty Blue", kind: "denim-shirt", priceAED: 75.0, image: "products/0371.jpg" },
+  { title: "Chemise en Denim - Bleu Oxford", titleEn: "Denim Shirt - Oxford Blue", kind: "denim-shirt", priceAED: 80.0, image: "products/0375.jpg" },
+  { title: "Short Chino - Moutarde", titleEn: "Chino Shorts - Mustard", kind: "chino-short", priceAED: 45.0, image: "products/Mustard.jpg" },
+  { title: "Short Chino - Vert Olive", titleEn: "Chino Shorts - Olive Green", kind: "chino-short", priceAED: 45.0, image: "products/olivegreen_2076f825-5a6c-487e-a209-61ced335beca.jpg" },
+  { title: "Pantalon en Denim Uni - Bleu Glacier", titleEn: "Denim Pant Plain - Ice Blue / 0430", kind: "denim-pant", priceAED: 40.0, image: "products/430.jpg" },
+  { title: "Pantalon en Denim - Gris Clair", titleEn: "Denim Pant - Light Grey / 0433", kind: "denim-pant", priceAED: 87.0, image: "products/0433.jpg" },
+  { title: "Pantalon en Denim Slim - Noir Jais", titleEn: "Denim Pant Slim Fit - Jet Black / 0439", kind: "denim-pant", priceAED: 62.0, image: "products/0439.jpg" },
+  { title: "Pantalon en Denim Délavé - Bleu Sale", titleEn: "Denim Pant Faded - Dirty Blue / 0447", kind: "denim-pant", priceAED: 87.0, image: "products/447.jpg" },
+  { title: "Sweat Basique Laine & Coton", titleEn: "Wool & Cotton Basic Sweatshirt", kind: "sweatshirt", priceAED: 50.0, image: "products/0474.jpg" },
+  { title: "Pantalon Chino Gris", titleEn: "Chino Pants Grey - 0552", kind: "chino-pant", priceAED: 29.0, image: "products/0552.jpg" },
+  { title: "Pantalon Cargo Camouflage Gris", titleEn: "Cargo Pants - Grey Camouflage", kind: "cargo", priceAED: 55.0, image: "products/529.jpg" },
+  { title: "Pantalon Cargo Camouflage Vert", titleEn: "Cargo Pants - Camouflage Green", kind: "cargo", priceAED: 55.0, image: "products/384_bd61919e-6228-4f50-8ee8-ad08ca0849e1.jpg" },
+  { title: "Ensemble Imprimé Coordonné", titleEn: "Printed Sets - PRSE584", kind: "set", priceAED: 65.0, image: "products/IMG_6324.jpg" },
+  { title: "Jogger en Denim - Bleu Foncé", titleEn: "Denim Jogger Dark Blue - 0638", kind: "jogger", priceAED: 75.0, image: "products/0638.jpg" },
+  { title: "Jogger en Denim - Bleu Moyen", titleEn: "Denim Jogger Mid Blue - 0639", kind: "jogger", priceAED: 75.0, image: "products/0639.jpg" },
+  { title: "Jogger en Denim - Bleu Clair", titleEn: "Denim Jogger Light Blue - 0641", kind: "jogger", priceAED: 75.0, image: "products/0641.jpg" },
+
+  { title: "Sweat Logo Embossé Vert", titleEn: "Green Embossed Logo Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/0773.jpg" },
+  { title: "Sweat Polaire à Carreaux Noir & Rouge", titleEn: "Black & Red Check Fleece Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/0774.jpg" },
+  { title: "Sweat Vintage Bleu Foncé", titleEn: "Dark Blue Vintage Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/0775.jpg" },
+  { title: "Sweat Polaire Patch Cuir - Bleu Foncé", titleEn: "Fleece With Leather Patch Sweatshirt - Dark Blue", kind: "sweatshirt", priceAED: 75.0, image: "products/0776.jpg" },
+  { title: "Sweat Polaire Patch Cuir", titleEn: "Fleece Sweatshirt With Leather Patch", kind: "sweatshirt", priceAED: 65.0, image: "products/0778.jpg" },
+  { title: "Sweat Anthracite", titleEn: "Charcoal Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/0779.jpg" },
+  { title: "Sweat Nomadic Journey Vert", titleEn: "Nomadic Journey Green Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/0780.jpg" },
+  { title: "T-Shirt American - Blanc", titleEn: "American T-Shirts - White 0786", kind: "tee", priceAED: 39.0, image: "products/0786.jpg" },
+  { title: "T-Shirt Oversize - Blanc", titleEn: "Oversize T-Shirts - White 0787", kind: "tee", priceAED: 29.0, image: "products/0787.jpg" },
+  { title: "T-Shirt American - Noir", titleEn: "American T-Shirts - Black 0792", kind: "tee", priceAED: 39.0, image: "products/0792.jpg" },
+  { title: "T-Shirt Oversize Rick Waves", titleEn: "Rick Waves Oversize T-Shirts", kind: "tee", priceAED: 45.0, image: "products/0794.jpg" },
+  { title: "T-Shirt Oversize - Blanc 0801", titleEn: "Oversize T-Shirts - White 0801", kind: "tee", priceAED: 45.0, image: "products/0801.jpg" },
+  { title: "T-Shirt Poche Colorblock", titleEn: "Blocked Front pocket Tee - 1416", kind: "tee", priceAED: 45.0, image: "products/1416.jpg" },
+  { title: "T-Shirt Poche Gris", titleEn: "Grey Front Pocket Tee - 1418", kind: "tee", priceAED: 45.0, image: "products/6_9ceeb888-d5d5-448f-8078-9ba19b2e6d2b.jpg" },
+  { title: "Jogger Gris Chiné", titleEn: "Heather Grey Slim Fit Jogger Pant", kind: "jogger", priceAED: 55.0, image: "products/2040.jpg" },
+  { title: "Short en Jean Vert", titleEn: "Denim Shorts - Green 2055", kind: "denim-short", priceAED: 55.0, image: "products/2055.jpg" },
+  { title: "Short en Jean Déchiré Blanc", titleEn: "Denim Shorts Ripped - White", kind: "denim-short", priceAED: 55.0, image: "products/0682.jpg" },
+  { title: "Short Chino - Orange Clair", titleEn: "Chino Shorts - Light Orange", kind: "chino-short", priceAED: 55.0, image: "products/lightorange.jpg" },
+  { title: "Short Chino - Vert Nuit", titleEn: "Chino Shorts - Night Green", kind: "chino-short", priceAED: 55.0, image: "products/nightgreen.jpg" },
+  { title: "Chemise en Denim - Bleu Enfer", titleEn: "Denim Shirt - Hell Blue", kind: "denim-shirt", priceAED: 75.0, image: "products/0373.jpg" },
+  { title: "Chemise en Denim - Bleu Encre", titleEn: "Denim Shirt - Ink Blue", kind: "denim-shirt", priceAED: 80.0, image: "products/2063.jpg" },
+  { title: "Chemise en Denim - Bleu Foncé 2066", titleEn: "Denim Shirt Dark Blue - 2066", kind: "denim-shirt", priceAED: 80.0, image: "products/2066.jpg" },
+  { title: "T-Shirt Oversize Imprimé Clipper", titleEn: "Oversize Clipper Printed T-Shirt - 40% Off", kind: "tee", priceAED: 51.0, discountPct: 40, image: "files/yaleblueb.jpg" },
+
+  { title: "Sweat LCOST x KEITH", titleEn: "LCOST x KEITH Sweatshirt - 50% Off", kind: "sweatshirt", priceAED: 47.0, discountPct: 50, image: "files/image_9b54121d-b87b-4758-929b-b75e96032447.jpg" },
+  { title: "Sweat Griffé Bleu", titleEn: "Branded Sweatshirt Blue - 50% Off", kind: "sweatshirt", priceAED: 47.0, discountPct: 50, image: "files/493.jpg" },
+  { title: "Hoodie Griffé Anthracite", titleEn: "Branded Hoodie Charcoal - 50% Off", kind: "hoodie", priceAED: 47.0, discountPct: 50, image: "files/Charcoal.jpg" },
+  { title: "Hoodie Griffé Bleu", titleEn: "Branded Hoodie Blue - 50% Off", kind: "hoodie", priceAED: 47.0, discountPct: 50, image: "files/image_c35e4de5-088f-47c2-a141-2a40a06211b6.jpg" },
+  { title: "Sweat Texturé Fines Rayures Bleu", titleEn: "Micro Textured Line French Blue - 50% Off", kind: "sweatshirt", priceAED: 45.0, discountPct: 50, image: "files/FRSH233_1.jpg" },
+];
+
+const usedSlugs = new Set(PRODUCTS.map((p) => p.slug));
+
+for (const item of RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title.replace(/\s*-\s*\d+$/, "")}. ${template.fr}`,
+    descriptionEn: `${item.titleEn.replace(/\s*-\s*\d+$/, "").replace(/\s*-\s*\d+% Off$/i, "")}. ${template.en}`,
+    images: [imageUrl],
+  });
+}
 
 const REVIEWERS = [
   { name: "Léa M.", email: "lea.m@seed.urbandiscount.local" },
