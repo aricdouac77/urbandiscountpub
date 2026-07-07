@@ -1,7 +1,10 @@
 "use server";
 
+import { getLocale } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { getRedis } from "@/services/redis";
+import { localize } from "@/lib/locale-content";
+import type { Locale } from "@/i18n/routing";
 import type { ProductCardData } from "@/features/catalog/types/product-card";
 
 const PLACEHOLDER_IMAGE = "https://picsum.photos/seed/urbandiscount-fallback/900/1125";
@@ -11,12 +14,15 @@ export async function searchProductsPreview(query: string): Promise<ProductCardD
   const trimmed = query.trim();
   if (trimmed.length < 2) return [];
 
+  const locale = (await getLocale()) as Locale;
+
   const [products] = await Promise.all([
     prisma.product.findMany({
       where: {
         status: "ACTIVE",
         OR: [
           { name: { contains: trimmed, mode: "insensitive" } },
+          { nameEn: { contains: trimmed, mode: "insensitive" } },
           { brand: { contains: trimmed, mode: "insensitive" } },
           { shortDescription: { contains: trimmed, mode: "insensitive" } },
         ],
@@ -27,18 +33,21 @@ export async function searchProductsPreview(query: string): Promise<ProductCardD
     recordSearchTerm(trimmed),
   ]);
 
-  return products.map((product) => ({
-    id: product.id,
-    slug: product.slug,
-    name: product.name,
-    brand: product.brand,
-    imageUrl: product.images[0]?.url ?? PLACEHOLDER_IMAGE,
-    imageAlt: product.images[0]?.alt ?? product.name,
-    price: Number(product.basePrice),
-    compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
-    isNewArrival: product.isNewArrival,
-    isBestSeller: product.isBestSeller,
-  }));
+  return products.map((product) => {
+    const name = localize(product.name, product.nameEn, locale);
+    return {
+      id: product.id,
+      slug: product.slug,
+      name,
+      brand: product.brand,
+      imageUrl: product.images[0]?.url ?? PLACEHOLDER_IMAGE,
+      imageAlt: product.images[0]?.alt ?? name,
+      price: Number(product.basePrice),
+      compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
+      isNewArrival: product.isNewArrival,
+      isBestSeller: product.isBestSeller,
+    };
+  });
 }
 
 async function recordSearchTerm(term: string) {

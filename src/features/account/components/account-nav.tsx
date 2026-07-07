@@ -1,18 +1,19 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-
-const NAV_ITEMS = [
-  { href: "/compte", label: "Vue d'ensemble" },
-  { href: "/compte/commandes", label: "Mes commandes" },
-  { href: "/compte/adresses", label: "Mes adresses" },
-  { href: "/compte/profil", label: "Mon profil" },
-];
 
 export function AccountNav() {
   const pathname = usePathname();
+  const t = useTranslations("account");
+
+  const NAV_ITEMS = [
+    { href: "/compte", label: t("overview") },
+    { href: "/compte/commandes", label: t("orders") },
+    { href: "/compte/adresses", label: t("addresses") },
+    { href: "/compte/profil", label: t("profile") },
+  ];
 
   return (
     <nav className="flex gap-1 overflow-x-auto border-b pb-px lg:flex-col lg:border-b-0 lg:pb-0">

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { ProductCard } from "@/features/catalog/components/product-card";
 import { SortSelect } from "@/features/catalog/components/listing/sort-select";
 import { ListingPagination } from "@/features/catalog/components/listing/listing-pagination";
@@ -24,6 +25,8 @@ export function ProductListing({
   sort,
   buildPageHref,
 }: ProductListingProps) {
+  const t = useTranslations("product");
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <SiteBreadcrumb items={breadcrumb} />
@@ -37,16 +40,14 @@ export function ProductListing({
             <p className="text-muted-foreground mt-2 max-w-xl text-sm">{description}</p>
           )}
           <p className="text-muted-foreground mt-2 text-sm">
-            {result.totalCount} produit{result.totalCount > 1 ? "s" : ""}
+            {t("productCount", { count: result.totalCount })}
           </p>
         </div>
         <SortSelect value={sort} />
       </div>
 
       {result.products.length === 0 ? (
-        <p className="text-muted-foreground mt-16 text-center text-sm">
-          Aucun produit disponible pour le moment.
-        </p>
+        <p className="text-muted-foreground mt-16 text-center text-sm">{t("noProducts")}</p>
       ) : (
         <>
           <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">

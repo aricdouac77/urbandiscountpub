@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { toast } from "sonner";
 import { Star, Trash2 } from "lucide-react";
 import { AddressFormDialog } from "@/features/account/components/address-form-dialog";
@@ -9,6 +10,7 @@ import type { Address } from "@/generated/prisma/client";
 
 export function AddressList({ addresses }: { addresses: Address[] }) {
   const router = useRouter();
+  const t = useTranslations("account");
 
   async function handleDelete(id: string) {
     const result = await deleteAddress(id);
@@ -16,7 +18,7 @@ export function AddressList({ addresses }: { addresses: Address[] }) {
       toast.error(result.message);
       return;
     }
-    toast.success("Adresse supprimée");
+    toast.success(t("addressDeleted"));
     router.refresh();
   }
 
@@ -26,7 +28,7 @@ export function AddressList({ addresses }: { addresses: Address[] }) {
       toast.error(result.message);
       return;
     }
-    toast.success("Adresse par défaut mise à jour");
+    toast.success(t("defaultAddressUpdated"));
     router.refresh();
   }
 
@@ -37,7 +39,7 @@ export function AddressList({ addresses }: { addresses: Address[] }) {
       </div>
 
       {addresses.length === 0 ? (
-        <p className="text-muted-foreground text-sm">Aucune adresse enregistrée.</p>
+        <p className="text-muted-foreground text-sm">{t("noAddressesSaved")}</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {addresses.map((address) => (
@@ -54,7 +56,7 @@ export function AddressList({ addresses }: { addresses: Address[] }) {
                 </div>
                 {address.isDefault && (
                   <span className="bg-brand/10 text-brand rounded-full px-2 py-0.5 text-xs font-medium">
-                    Par défaut
+                    {t("defaultAddress")}
                   </span>
                 )}
               </div>
@@ -66,7 +68,7 @@ export function AddressList({ addresses }: { addresses: Address[] }) {
                     className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-xs"
                   >
                     <Star className="size-3.5" />
-                    Définir par défaut
+                    {t("setAsDefault")}
                   </button>
                 )}
                 <button
@@ -75,7 +77,7 @@ export function AddressList({ addresses }: { addresses: Address[] }) {
                   className="text-muted-foreground hover:text-destructive flex items-center gap-1 text-xs"
                 >
                   <Trash2 className="size-3.5" />
-                  Supprimer
+                  {t("delete")}
                 </button>
               </div>
             </div>

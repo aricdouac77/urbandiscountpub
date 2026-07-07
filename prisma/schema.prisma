@@ -132,14 +132,16 @@ model Address {
 // ────────────────────────────────────────────────────────────
 
 model Category {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  image       String?
-  position    Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  nameEn        String?
+  slug          String   @unique
+  description   String?
+  descriptionEn String?
+  image         String?
+  position      Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   parentId String?
   parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
@@ -152,16 +154,18 @@ model Category {
 }
 
 model Collection {
-  id          String    @id @default(cuid())
-  name        String
-  slug        String    @unique
-  description String?
-  image       String?
-  isFeatured  Boolean   @default(false)
-  startsAt    DateTime?
-  endsAt      DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  name          String
+  nameEn        String?
+  slug          String    @unique
+  description   String?
+  descriptionEn String?
+  image         String?
+  isFeatured    Boolean   @default(false)
+  startsAt      DateTime?
+  endsAt        DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   products ProductCollection[]
 
@@ -175,26 +179,33 @@ enum ProductStatus {
 }
 
 model Product {
-  id               String        @id @default(cuid())
-  name             String
-  slug             String        @unique
-  description      String
-  shortDescription String?
-  brand            String?
-  status           ProductStatus @default(DRAFT)
-  basePrice        Decimal       @db.Decimal(10, 2)
-  compareAtPrice   Decimal?      @db.Decimal(10, 2)
-  currency         String        @default("EUR")
-  isFeatured       Boolean       @default(false)
-  isBestSeller     Boolean       @default(false)
-  isNewArrival     Boolean       @default(false)
-  metaTitle        String?
-  metaDescription  String?
-  videoUrl         String?
-  materials        String?
-  careInstructions String?
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  id                 String        @id @default(cuid())
+  name               String
+  nameEn             String?
+  slug               String        @unique
+  description        String
+  descriptionEn      String?
+  shortDescription   String?
+  shortDescriptionEn String?
+  brand              String?
+  status             ProductStatus @default(DRAFT)
+  basePrice          Decimal       @db.Decimal(10, 2)
+  compareAtPrice     Decimal?      @db.Decimal(10, 2)
+  currency           String        @default("EUR")
+  isFeatured         Boolean       @default(false)
+  isBestSeller       Boolean       @default(false)
+  isNewArrival       Boolean       @default(false)
+  metaTitle          String?
+  metaTitleEn        String?
+  metaDescription    String?
+  metaDescriptionEn  String?
+  videoUrl           String?
+  materials          String?
+  materialsEn        String?
+  careInstructions   String?
+  careInstructionsEn String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)

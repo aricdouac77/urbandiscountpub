@@ -1,13 +1,16 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
+  const t = useTranslations("home");
+
   return (
     <section className="relative flex min-h-[85vh] items-end overflow-hidden">
       <Image
         src="https://picsum.photos/seed/urbandiscount-hero/1920/1200"
-        alt="Nouvelle collection UrbanDiscount"
+        alt={t("heroKicker")}
         fill
         priority
         sizes="100vw"
@@ -16,21 +19,18 @@ export function HeroSection() {
       <div className="from-background/95 via-background/20 absolute inset-0 bg-gradient-to-t to-transparent" />
       <div className="relative mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <p className="text-brand mb-3 text-sm font-medium tracking-widest uppercase">
-          Nouvelle collection
+          {t("heroKicker")}
         </p>
         <h1 className="font-heading max-w-xl text-4xl font-semibold tracking-tight sm:text-6xl">
-          Le style urbain, sans compromis sur le prix.
+          {t("heroTitle")}
         </h1>
-        <p className="text-muted-foreground mt-4 max-w-md text-base">
-          Sneakers, streetwear et accessoires sélectionnés pour leur qualité — à des prix qui ont du
-          sens.
-        </p>
+        <p className="text-muted-foreground mt-4 max-w-md text-base">{t("heroSubtitle")}</p>
         <div className="mt-8 flex gap-3">
           <Button size="lg" asChild>
-            <Link href="/collections/nouveautes">Découvrir</Link>
+            <Link href="/collections/nouveautes">{t("heroCtaPrimary")}</Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <Link href="/collections/meilleures-ventes">Meilleures ventes</Link>
+            <Link href="/collections/meilleures-ventes">{t("heroCtaSecondary")}</Link>
           </Button>
         </div>
       </div>

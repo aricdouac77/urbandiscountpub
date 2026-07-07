@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -22,6 +23,7 @@ import { registerSchema, type RegisterInput } from "@/features/auth/schemas/auth
 export function RegisterForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const t = useTranslations("auth");
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -40,7 +42,7 @@ export function RegisterForm() {
     setIsSubmitting(false);
 
     if (error) {
-      toast.error(error.message ?? "Impossible de créer le compte");
+      toast.error(error.message ?? t("createAccountFailed"));
       return;
     }
 
@@ -56,9 +58,9 @@ export function RegisterForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom complet</FormLabel>
+              <FormLabel>{t("fullName")}</FormLabel>
               <FormControl>
-                <Input autoComplete="name" placeholder="Jeanne Dupont" {...field} />
+                <Input autoComplete="name" placeholder={t("namePlaceholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -70,12 +72,12 @@ export function RegisterForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>E-mail</FormLabel>
+              <FormLabel>{t("email")}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   autoComplete="email"
-                  placeholder="vous@exemple.com"
+                  placeholder={t("emailPlaceholder")}
                   {...field}
                 />
               </FormControl>
@@ -89,7 +91,7 @@ export function RegisterForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mot de passe</FormLabel>
+              <FormLabel>{t("password")}</FormLabel>
               <FormControl>
                 <Input type="password" autoComplete="new-password" {...field} />
               </FormControl>
@@ -99,7 +101,7 @@ export function RegisterForm() {
         />
 
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Création..." : "Créer mon compte"}
+          {isSubmitting ? t("creatingAccount") : t("signUp")}
         </Button>
       </form>
     </Form>

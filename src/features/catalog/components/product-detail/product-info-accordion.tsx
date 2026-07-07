@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   Accordion,
   AccordionContent,
@@ -16,53 +17,44 @@ export function ProductInfoAccordion({
   materials,
   careInstructions,
 }: ProductInfoAccordionProps) {
+  const t = useTranslations("product");
+
   return (
     <Accordion type="single" collapsible defaultValue="description" className="w-full">
       <AccordionItem value="description">
-        <AccordionTrigger>Description</AccordionTrigger>
+        <AccordionTrigger>{t("description")}</AccordionTrigger>
         <AccordionContent>{description}</AccordionContent>
       </AccordionItem>
 
       <AccordionItem value="characteristics">
-        <AccordionTrigger>Caractéristiques</AccordionTrigger>
+        <AccordionTrigger>{t("characteristics")}</AccordionTrigger>
         <AccordionContent className="space-y-1">
-          {materials && <p>Matières : {materials}</p>}
-          {careInstructions && <p>Entretien : {careInstructions}</p>}
-          {!materials && !careInstructions && <p>Informations non renseignées pour ce produit.</p>}
+          {materials && <p>{t("materialsLine", { materials })}</p>}
+          {careInstructions && <p>{t("careInstructionsLine", { care: careInstructions })}</p>}
+          {!materials && !careInstructions && <p>{t("noInfo")}</p>}
         </AccordionContent>
       </AccordionItem>
 
       <AccordionItem value="delivery">
-        <AccordionTrigger>Livraison</AccordionTrigger>
-        <AccordionContent>
-          Livraison standard sous 3 à 5 jours ouvrés. Livraison gratuite dès 50€ d&apos;achat.
-          Livraison express disponible au checkout.
-        </AccordionContent>
+        <AccordionTrigger>{t("delivery")}</AccordionTrigger>
+        <AccordionContent>{t("deliveryText")}</AccordionContent>
       </AccordionItem>
 
       <AccordionItem value="returns">
-        <AccordionTrigger>Retours</AccordionTrigger>
-        <AccordionContent>
-          Retours et échanges gratuits sous 30 jours. L&apos;article doit être renvoyé non porté,
-          dans son emballage d&apos;origine.
-        </AccordionContent>
+        <AccordionTrigger>{t("returns")}</AccordionTrigger>
+        <AccordionContent>{t("returnsText")}</AccordionContent>
       </AccordionItem>
 
       <AccordionItem value="faq">
-        <AccordionTrigger>Questions fréquentes</AccordionTrigger>
+        <AccordionTrigger>{t("faq")}</AccordionTrigger>
         <AccordionContent className="space-y-3">
           <div>
-            <p className="font-medium">Comment choisir ma taille ?</p>
-            <p className="text-muted-foreground">
-              Consultez notre guide des tailles ou contactez notre service client pour être
-              conseillé·e.
-            </p>
+            <p className="font-medium">{t("faqSizeQuestion")}</p>
+            <p className="text-muted-foreground">{t("faqSizeAnswer")}</p>
           </div>
           <div>
-            <p className="font-medium">Puis-je suivre ma commande ?</p>
-            <p className="text-muted-foreground">
-              Oui, un lien de suivi vous est envoyé par e-mail dès l&apos;expédition.
-            </p>
+            <p className="font-medium">{t("faqTrackingQuestion")}</p>
+            <p className="text-muted-foreground">{t("faqTrackingAnswer")}</p>
           </div>
         </AccordionContent>
       </AccordionItem>

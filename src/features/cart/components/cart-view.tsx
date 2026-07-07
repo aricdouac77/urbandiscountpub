@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { CartItemRow } from "@/features/cart/components/cart-item-row";
 import { CartSummary } from "@/features/cart/components/cart-summary";
@@ -11,6 +12,7 @@ export function CartView() {
   const [mounted, setMounted] = useState(false);
   const items = useCartStore((state) => state.items);
   const coupon = useCartStore((state) => state.coupon);
+  const t = useTranslations("cart");
 
   useEffect(() => setMounted(true), []);
 
@@ -21,9 +23,9 @@ export function CartView() {
   if (items.length === 0) {
     return (
       <div className="py-24 text-center">
-        <p className="text-muted-foreground text-sm">Votre panier est vide.</p>
+        <p className="text-muted-foreground text-sm">{t("empty")}</p>
         <Button className="mt-6" asChild>
-          <Link href="/">Continuer mes achats</Link>
+          <Link href="/">{t("continueShopping")}</Link>
         </Button>
       </div>
     );
@@ -48,7 +50,7 @@ export function CartView() {
           freeShipping={totals.freeShipping}
         />
         <Button size="lg" className="w-full" asChild>
-          <Link href="/checkout">Passer la commande</Link>
+          <Link href="/checkout">{t("checkout")}</Link>
         </Button>
       </div>
     </div>

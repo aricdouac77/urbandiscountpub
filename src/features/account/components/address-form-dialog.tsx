@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -29,6 +30,7 @@ import { addressSchema, type AddressInput } from "@/features/account/schemas/acc
 export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const t = useTranslations("account");
 
   const form = useForm<AddressInput>({
     resolver: zodResolver(addressSchema),
@@ -55,7 +57,7 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
       return;
     }
 
-    toast.success("Adresse ajoutée");
+    toast.success(t("addressAdded"));
     form.reset();
     setOpen(false);
     onCreated();
@@ -66,12 +68,12 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Plus className="size-4" />
-          Ajouter une adresse
+          {t("addAddress")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Nouvelle adresse</DialogTitle>
+          <DialogTitle>{t("addressFormTitleNew")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -80,7 +82,7 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nom complet</FormLabel>
+                  <FormLabel>{t("fullName")}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -93,7 +95,7 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
               name="line1"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Adresse</FormLabel>
+                  <FormLabel>{t("addressLine1")}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -106,7 +108,7 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
               name="line2"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Complément (optionnel)</FormLabel>
+                  <FormLabel>{t("addressLine2Short")}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -120,7 +122,7 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
                 name="postalCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Code postal</FormLabel>
+                    <FormLabel>{t("postalCode")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -133,7 +135,7 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
                 name="city"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ville</FormLabel>
+                    <FormLabel>{t("city")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -147,7 +149,7 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
               name="country"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Pays</FormLabel>
+                  <FormLabel>{t("country")}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -160,7 +162,7 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Téléphone (optionnel)</FormLabel>
+                  <FormLabel>{t("phone")}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -176,12 +178,12 @@ export function AddressFormDialog({ onCreated }: { onCreated: () => void }) {
                   <FormControl>
                     <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
-                  <FormLabel className="font-normal">Définir comme adresse par défaut</FormLabel>
+                  <FormLabel className="font-normal">{t("setAsDefaultLabel")}</FormLabel>
                 </FormItem>
               )}
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Enregistrement..." : "Enregistrer l'adresse"}
+              {isSubmitting ? t("saving") : t("saveAddress")}
             </Button>
           </form>
         </Form>

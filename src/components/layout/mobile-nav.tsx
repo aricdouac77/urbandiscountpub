@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -9,11 +10,12 @@ import type { CategoryNavData } from "@/features/catalog/queries/get-home-sectio
 
 export function MobileNav({ categories }: { categories: CategoryNavData[] }) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("nav");
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Ouvrir le menu">
+        <Button variant="ghost" size="icon" className="lg:hidden" aria-label={t("openMenu")}>
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
@@ -37,7 +39,7 @@ export function MobileNav({ categories }: { categories: CategoryNavData[] }) {
             onClick={() => setOpen(false)}
             className="text-brand hover:bg-accent rounded-md px-2 py-2.5 text-sm font-medium"
           >
-            Nouveautés
+            {t("newArrivals")}
           </Link>
           <div className="bg-border my-2 h-px" />
           <Link
@@ -45,21 +47,21 @@ export function MobileNav({ categories }: { categories: CategoryNavData[] }) {
             onClick={() => setOpen(false)}
             className="hover:bg-accent rounded-md px-2 py-2.5 text-sm"
           >
-            À propos
+            {t("about")}
           </Link>
           <Link
             href="/contact"
             onClick={() => setOpen(false)}
             className="hover:bg-accent rounded-md px-2 py-2.5 text-sm"
           >
-            Contact
+            {t("contact")}
           </Link>
           <Link
             href="/faq"
             onClick={() => setOpen(false)}
             className="hover:bg-accent rounded-md px-2 py-2.5 text-sm"
           >
-            FAQ
+            {t("faq")}
           </Link>
         </nav>
       </SheetContent>

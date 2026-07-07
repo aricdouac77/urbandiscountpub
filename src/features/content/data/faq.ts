@@ -1,4 +1,6 @@
-export const FAQ_SECTIONS = [
+import type { Locale } from "@/i18n/routing";
+
+const FAQ_SECTIONS_FR = [
   {
     id: "commandes",
     title: "Commandes",
@@ -78,3 +80,86 @@ export const FAQ_SECTIONS = [
     ],
   },
 ] as const;
+
+const FAQ_SECTIONS_EN = [
+  {
+    id: "commandes",
+    title: "Orders",
+    items: [
+      {
+        question: "How do I track my order?",
+        answer:
+          "An email with a tracking link is sent to you as soon as your order ships. You can also track your order at any time from the Order Tracking page by entering your order number and email.",
+      },
+      {
+        question: "Can I modify or cancel my order?",
+        answer:
+          "As long as the order hasn't shipped yet, contact our customer service as soon as possible: we'll do our best to modify or cancel it.",
+      },
+      {
+        question: "What if an item is out of stock?",
+        answer:
+          "Stock is updated in real time. If an item becomes unavailable after your order, our team will contact you for a refund or exchange.",
+      },
+    ],
+  },
+  {
+    id: "livraison",
+    title: "Shipping",
+    items: [
+      {
+        question: "What are the delivery times?",
+        answer:
+          "Standard shipping within 3 to 5 business days in mainland France. An express option is available at checkout for delivery within 24 to 48 hours.",
+      },
+      {
+        question: "Is shipping free?",
+        answer: "Yes, on orders over €50. Below that, a €4.90 shipping fee applies.",
+      },
+      {
+        question: "Do you ship internationally?",
+        answer:
+          "We currently ship to mainland France, Belgium, Luxembourg and Switzerland. More countries will be added soon.",
+      },
+    ],
+  },
+  {
+    id: "retours",
+    title: "Returns & exchanges",
+    items: [
+      {
+        question: "What is your return policy?",
+        answer:
+          "You have 30 days after receipt to return an unworn item, in its original packaging, for a refund or exchange.",
+      },
+      {
+        question: "How do I start a return?",
+        answer:
+          "Go to your account area, Orders section, then select the item to return. Our team processes every request within 48 hours.",
+      },
+      {
+        question: "Who covers the return shipping costs?",
+        answer: "Returns are free for any exchange or refund within mainland France.",
+      },
+    ],
+  },
+  {
+    id: "paiement",
+    title: "Payment",
+    items: [
+      {
+        question: "What payment methods do you accept?",
+        answer: "Credit card, Apple Pay and Google Pay via our secure payment partner Stripe.",
+      },
+      {
+        question: "Is payment secure?",
+        answer:
+          "Yes, all payments are processed by Stripe, PCI-DSS Level 1 certified. We never store your banking details.",
+      },
+    ],
+  },
+] as const;
+
+export function getFaqSections(locale: Locale) {
+  return locale === "en" ? FAQ_SECTIONS_EN : FAQ_SECTIONS_FR;
+}

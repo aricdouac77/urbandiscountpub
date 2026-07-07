@@ -1,7 +1,8 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { toast } from "sonner";
 import { getWishlistIds, toggleWishlistItem } from "@/actions/wishlist.actions";
 import { useSession } from "@/lib/auth-client";
@@ -22,6 +23,7 @@ export function useToggleWishlist() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { data: session } = useSession();
+  const t = useTranslations("wishlist");
 
   return useMutation({
     mutationFn: (productId: string) => toggleWishlistItem(productId),
@@ -44,7 +46,7 @@ export function useToggleWishlist() {
     },
     onSuccess: (result) => {
       if (result.requiresAuth) {
-        toast.error("Connectez-vous pour ajouter à votre liste d'envies");
+        toast.error(t("signInRequired"));
         router.push("/connexion");
       }
     },

@@ -1,6 +1,8 @@
 "use client";
 
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter, usePathname } from "@/i18n/navigation";
 import {
   Select,
   SelectContent,
@@ -10,16 +12,17 @@ import {
 } from "@/components/ui/select";
 import type { SortOption } from "@/features/catalog/queries/get-product-listing";
 
-const SORT_LABELS: Record<SortOption, string> = {
-  newest: "Nouveautés",
-  "price-asc": "Prix croissant",
-  "price-desc": "Prix décroissant",
-};
-
 export function SortSelect({ value }: { value: SortOption }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations("product");
+
+  const SORT_LABELS: Record<SortOption, string> = {
+    newest: t("sortNewest"),
+    "price-asc": t("sortPriceAsc"),
+    "price-desc": t("sortPriceDesc"),
+  };
 
   function handleChange(next: string) {
     const params = new URLSearchParams(searchParams.toString());

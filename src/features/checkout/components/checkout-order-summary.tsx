@@ -1,9 +1,6 @@
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 import type { CartItem } from "@/features/cart/store/cart-store";
-
-function formatPrice(value: number) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(value);
-}
 
 type CheckoutOrderSummaryProps = {
   items: CartItem[];
@@ -22,9 +19,20 @@ export function CheckoutOrderSummary({
   total,
   freeShipping,
 }: CheckoutOrderSummaryProps) {
+  const t = useTranslations("checkout");
+  const tCart = useTranslations("cart");
+  const locale = useLocale();
+
+  function formatPrice(value: number) {
+    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value);
+  }
+
   return (
     <div className="bg-muted/30 space-y-4 rounded-lg border p-6">
-      <h2 className="font-medium">Votre commande</h2>
+      <h2 className="font-medium">{t("orderSummary")}</h2>
 
       <div className="max-h-72 space-y-4 overflow-y-auto">
         {items.map((item) => (
@@ -37,7 +45,11 @@ export function CheckoutOrderSummary({
             </div>
             <div className="flex-1">
               <p className="text-sm font-medium">{item.name}</p>
-              {item.size && <p className="text-muted-foreground text-xs">Taille : {item.size}</p>}
+              {item.size && (
+                <p className="text-muted-foreground text-xs">
+                  {tCart("size", { size: item.size })}
+                </p>
+              )}
             </div>
             <span className="text-sm font-medium">{formatPrice(item.price * item.quantity)}</span>
           </div>
@@ -46,23 +58,23 @@ export function CheckoutOrderSummary({
 
       <div className="space-y-2 border-t pt-4 text-sm">
         <div className="flex justify-between">
-          <span className="text-muted-foreground">Sous-total</span>
+          <span className="text-muted-foreground">{tCart("subtotal")}</span>
           <span>{formatPrice(subtotal)}</span>
         </div>
         {discount > 0 && (
           <div className="text-brand flex justify-between">
-            <span>Réduction</span>
+            <span>{tCart("discount")}</span>
             <span>-{formatPrice(discount)}</span>
           </div>
         )}
         <div className="flex justify-between">
-          <span className="text-muted-foreground">Livraison</span>
-          <span>{freeShipping ? "Gratuite" : formatPrice(shipping)}</span>
+          <span className="text-muted-foreground">{tCart("shipping")}</span>
+          <span>{freeShipping ? tCart("freeShipping") : formatPrice(shipping)}</span>
         </div>
       </div>
 
       <div className="flex justify-between border-t pt-4 text-base font-semibold">
-        <span>Total</span>
+        <span>{tCart("total")}</span>
         <span>{formatPrice(total)}</span>
       </div>
     </div>

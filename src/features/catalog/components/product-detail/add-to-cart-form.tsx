@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ export function AddToCartForm({
   const [selectedSize, setSelectedSize] = useState<string | null>(defaultVariant?.size ?? null);
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((state) => state.addItem);
+  const t = useTranslations("product");
 
   const sizeVariants = useMemo(
     () => (selectedColor ? variants.filter((v) => v.color === selectedColor) : variants),
@@ -85,7 +87,7 @@ export function AddToCartForm({
       quantity,
     );
 
-    toast.success(`${name} ajouté au panier`);
+    toast.success(t("addedToCartToast", { name }));
   }
 
   return (
@@ -93,7 +95,7 @@ export function AddToCartForm({
       {colors.length > 0 && (
         <div>
           <p className="mb-2 text-sm font-medium">
-            Couleur{selectedColor ? ` — ${selectedColor}` : ""}
+            {t("colorLabel", { color: selectedColor ? ` — ${selectedColor}` : "" })}
           </p>
           <div className="flex flex-wrap gap-2">
             {colors.map((color) => (
@@ -118,7 +120,7 @@ export function AddToCartForm({
 
       {hasSizes && (
         <div>
-          <p className="mb-2 text-sm font-medium">Taille</p>
+          <p className="mb-2 text-sm font-medium">{t("size")}</p>
           <div className="flex flex-wrap gap-2">
             {sizeVariants.map((variant) => (
               <button
@@ -143,11 +145,11 @@ export function AddToCartForm({
 
       <div>
         {outOfStock && (
-          <p className="text-destructive text-sm">Rupture de stock pour cette taille.</p>
+          <p className="text-destructive text-sm">{t("outOfStockForSize")}</p>
         )}
         {lowStock && (
           <p className="text-brand text-sm">
-            Plus que {selectedVariant?.stock} en stock — dépêchez-vous.
+            {t("lowStock", { count: selectedVariant?.stock ?? 0 })}
           </p>
         )}
       </div>
@@ -159,7 +161,7 @@ export function AddToCartForm({
             variant="ghost"
             size="icon"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            aria-label="Diminuer la quantité"
+            aria-label={t("decreaseQuantity")}
           >
             <Minus className="size-4" />
           </Button>
@@ -169,7 +171,7 @@ export function AddToCartForm({
             variant="ghost"
             size="icon"
             onClick={() => setQuantity((q) => Math.min(10, q + 1))}
-            aria-label="Augmenter la quantité"
+            aria-label={t("increaseQuantity")}
           >
             <Plus className="size-4" />
           </Button>
@@ -182,7 +184,7 @@ export function AddToCartForm({
           disabled={!selectedVariant || outOfStock}
           onClick={handleAddToCart}
         >
-          {outOfStock ? "Indisponible" : "Ajouter au panier"}
+          {outOfStock ? t("unavailable") : t("addToCart")}
         </Button>
       </div>
     </div>

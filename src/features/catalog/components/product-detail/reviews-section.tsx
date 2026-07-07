@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Star, BadgeCheck } from "lucide-react";
 import type { ProductReviewData } from "@/features/catalog/types/product-detail";
 
@@ -25,23 +26,25 @@ type ReviewsSectionProps = {
 };
 
 export function ReviewsSection({ averageRating, reviewCount, reviews }: ReviewsSectionProps) {
+  const t = useTranslations("product");
+
   return (
     <section id="avis" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
-        <h2 className="text-2xl font-semibold sm:text-3xl">Avis clients</h2>
+        <h2 className="text-2xl font-semibold sm:text-3xl">{t("reviewsTitle")}</h2>
         {reviewCount > 0 && (
           <div className="flex items-center gap-2">
             <StarRating rating={averageRating} size="size-5" />
             <span className="text-sm font-medium">{averageRating.toFixed(1)}/5</span>
-            <span className="text-muted-foreground text-sm">({reviewCount} avis)</span>
+            <span className="text-muted-foreground text-sm">
+              {t("reviewCount", { count: reviewCount })}
+            </span>
           </div>
         )}
       </div>
 
       {reviews.length === 0 ? (
-        <p className="text-muted-foreground text-sm">
-          Aucun avis pour le moment. Soyez le premier à donner votre avis.
-        </p>
+        <p className="text-muted-foreground text-sm">{t("noReviewsYet")}</p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2">
           {reviews.map((review) => (
@@ -51,7 +54,7 @@ export function ReviewsSection({ averageRating, reviewCount, reviews }: ReviewsS
                 {review.isVerifiedPurchase && (
                   <span className="text-muted-foreground flex items-center gap-1 text-xs">
                     <BadgeCheck className="size-3.5" />
-                    Achat vérifié
+                    {t("verifiedPurchase")}
                   </span>
                 )}
               </div>

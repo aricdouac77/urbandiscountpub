@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -34,6 +35,7 @@ export function CheckoutForm() {
     clientSecret: string | null;
   } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const t = useTranslations("checkout");
 
   useEffect(() => setMounted(true), []);
 
@@ -81,9 +83,7 @@ export function CheckoutForm() {
   }
 
   if (items.length === 0 && !orderResult) {
-    return (
-      <p className="text-muted-foreground py-24 text-center text-sm">Votre panier est vide.</p>
-    );
+    return <p className="text-muted-foreground py-24 text-center text-sm">{t("empty")}</p>;
   }
 
   const totals = computeCartTotals(items, coupon);
@@ -104,7 +104,7 @@ export function CheckoutForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>E-mail</FormLabel>
+                    <FormLabel>{t("email")}</FormLabel>
                     <FormControl>
                       <Input type="email" autoComplete="email" {...field} />
                     </FormControl>
@@ -118,7 +118,7 @@ export function CheckoutForm() {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nom complet</FormLabel>
+                    <FormLabel>{t("fullName")}</FormLabel>
                     <FormControl>
                       <Input autoComplete="name" {...field} />
                     </FormControl>
@@ -132,7 +132,7 @@ export function CheckoutForm() {
                 name="line1"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Adresse</FormLabel>
+                    <FormLabel>{t("address")}</FormLabel>
                     <FormControl>
                       <Input autoComplete="address-line1" {...field} />
                     </FormControl>
@@ -146,7 +146,7 @@ export function CheckoutForm() {
                 name="line2"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Complément d&apos;adresse (optionnel)</FormLabel>
+                    <FormLabel>{t("addressLine2")}</FormLabel>
                     <FormControl>
                       <Input autoComplete="address-line2" {...field} />
                     </FormControl>
@@ -161,7 +161,7 @@ export function CheckoutForm() {
                   name="postalCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Code postal</FormLabel>
+                      <FormLabel>{t("postalCode")}</FormLabel>
                       <FormControl>
                         <Input autoComplete="postal-code" {...field} />
                       </FormControl>
@@ -174,7 +174,7 @@ export function CheckoutForm() {
                   name="city"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ville</FormLabel>
+                      <FormLabel>{t("city")}</FormLabel>
                       <FormControl>
                         <Input autoComplete="address-level2" {...field} />
                       </FormControl>
@@ -190,7 +190,7 @@ export function CheckoutForm() {
                   name="country"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Pays</FormLabel>
+                      <FormLabel>{t("country")}</FormLabel>
                       <FormControl>
                         <Input autoComplete="country-name" {...field} />
                       </FormControl>
@@ -203,7 +203,7 @@ export function CheckoutForm() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Téléphone (optionnel)</FormLabel>
+                      <FormLabel>{t("phone")}</FormLabel>
                       <FormControl>
                         <Input autoComplete="tel" {...field} />
                       </FormControl>
@@ -214,7 +214,7 @@ export function CheckoutForm() {
               </div>
 
               <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Validation..." : "Continuer vers le paiement"}
+                {isSubmitting ? t("submitting") : t("continueToPayment")}
               </Button>
             </form>
           </Form>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -20,9 +21,14 @@ import { authClient } from "@/lib/auth-client";
 import { loginSchema, type LoginInput } from "@/features/auth/schemas/auth.schema";
 
 export function LoginForm() {
+  // Plain next/navigation router: the `redirect` search param already carries
+  // the full locale-prefixed pathname captured by the middleware, so pushing
+  // it through next-intl's router would double-prefix the locale.
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const t = useTranslations("auth");
+  const locale = useLocale();
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -40,11 +46,11 @@ export function LoginForm() {
     setIsSubmitting(false);
 
     if (error) {
-      toast.error(error.message ?? "Identifiants invalides");
+      toast.error(error.message ?? t("invalidCredentials"));
       return;
     }
 
-    const redirectTo = searchParams.get("redirect") ?? "/compte";
+    const redirectTo = searchParams.get("redirect") ?? `/${locale}/compte`;
     router.push(redirectTo);
     router.refresh();
   }
@@ -57,12 +63,12 @@ export function LoginForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>E-mail</FormLabel>
+              <FormLabel>{t("email")}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   autoComplete="email"
-                  placeholder="vous@exemple.com"
+                  placeholder={t("emailPlaceholder")}
                   {...field}
                 />
               </FormControl>
@@ -76,7 +82,7 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mot de passe</FormLabel>
+              <FormLabel>{t("password")}</FormLabel>
               <FormControl>
                 <Input type="password" autoComplete="current-password" {...field} />
               </FormControl>
@@ -86,7 +92,7 @@ export function LoginForm() {
         />
 
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Connexion..." : "Se connecter"}
+          {isSubmitting ? t("signingIn") : t("signIn")}
         </Button>
       </form>
     </Form>

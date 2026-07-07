@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -23,9 +24,11 @@ const TESTIMONIALS = [
 ];
 
 export function TestimonialsSection() {
+  const t = useTranslations("home");
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <h2 className="mb-8 text-2xl font-semibold sm:text-3xl">Ce qu&apos;en disent nos clients</h2>
+      <h2 className="mb-8 text-2xl font-semibold sm:text-3xl">{t("testimonialsTitle")}</h2>
       <div className="grid gap-4 sm:grid-cols-3">
         {TESTIMONIALS.map((testimonial) => (
           <Card key={testimonial.name} className="bg-muted/40 border-none shadow-none">

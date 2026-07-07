@@ -1,5 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { localize } from "@/lib/locale-content";
+import type { Locale } from "@/i18n/routing";
 import type { ProductCardData } from "@/features/catalog/types/product-card";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -25,6 +27,7 @@ async function listProducts(
   where: Prisma.ProductWhereInput,
   page: number,
   sort: SortOption,
+  locale: Locale,
 ): Promise<ProductListingResult> {
   const safePage = Math.max(1, page);
 
@@ -40,18 +43,21 @@ async function listProducts(
   ]);
 
   return {
-    products: products.map((product) => ({
-      id: product.id,
-      slug: product.slug,
-      name: product.name,
-      brand: product.brand,
-      imageUrl: product.images[0]?.url ?? PLACEHOLDER_IMAGE,
-      imageAlt: product.images[0]?.alt ?? product.name,
-      price: Number(product.basePrice),
-      compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
-      isNewArrival: product.isNewArrival,
-      isBestSeller: product.isBestSeller,
-    })),
+    products: products.map((product) => {
+      const name = localize(product.name, product.nameEn, locale);
+      return {
+        id: product.id,
+        slug: product.slug,
+        name,
+        brand: product.brand,
+        imageUrl: product.images[0]?.url ?? PLACEHOLDER_IMAGE,
+        imageAlt: product.images[0]?.alt ?? name,
+        price: Number(product.basePrice),
+        compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
+        isNewArrival: product.isNewArrival,
+        isBestSeller: product.isBestSeller,
+      };
+    }),
     totalCount,
     totalPages: Math.max(1, Math.ceil(totalCount / PAGE_SIZE)),
     page: safePage,
@@ -75,7 +81,12 @@ export const getCollectionBySlug = unstable_cache(
 );
 
 export const getProductsByCategory = unstable_cache(
-  async (categorySlug: string, page: number, sort: SortOption): Promise<ProductListingResult> => {
+  async (
+    categorySlug: string,
+    page: number,
+    sort: SortOption,
+    locale: Locale,
+  ): Promise<ProductListingResult> => {
     // A category page also shows products from its subcategories (e.g. "Sneakers"
     // includes "Running" and "Lifestyle"), since products are assigned to leaf
     // categories only.
@@ -86,6 +97,7 @@ export const getProductsByCategory = unstable_cache(
       },
       page,
       sort,
+      locale,
     );
   },
   ["products-by-category"],
@@ -93,11 +105,17 @@ export const getProductsByCategory = unstable_cache(
 );
 
 export const getProductsByCollection = unstable_cache(
-  async (collectionSlug: string, page: number, sort: SortOption): Promise<ProductListingResult> => {
+  async (
+    collectionSlug: string,
+    page: number,
+    sort: SortOption,
+    locale: Locale,
+  ): Promise<ProductListingResult> => {
     return listProducts(
       { status: "ACTIVE", collections: { some: { collection: { slug: collectionSlug } } } },
       page,
       sort,
+      locale,
     );
   },
   ["products-by-collection"],
@@ -110,6 +128,7 @@ export async function getProductsBySearch(
   query: string,
   page: number,
   sort: SortOption,
+  locale: Locale,
 ): Promise<ProductListingResult> {
   const trimmed = query.trim();
   if (!trimmed) {
@@ -121,11 +140,13 @@ export async function getProductsBySearch(
       status: "ACTIVE",
       OR: [
         { name: { contains: trimmed, mode: "insensitive" } },
+        { nameEn: { contains: trimmed, mode: "insensitive" } },
         { brand: { contains: trimmed, mode: "insensitive" } },
         { shortDescription: { contains: trimmed, mode: "insensitive" } },
       ],
     },
     page,
     sort,
+    locale,
   );
 }

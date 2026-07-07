@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ export function PromoCodeForm({ subtotal }: { subtotal: number }) {
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("cart");
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -33,13 +35,11 @@ export function PromoCodeForm({ subtotal }: { subtotal: number }) {
   if (coupon) {
     return (
       <div className="bg-muted/50 flex items-center justify-between rounded-md border px-3 py-2 text-sm">
-        <span>
-          Code <strong>{coupon.code}</strong> appliqué
-        </span>
+        <span>{t("promoApplied", { code: coupon.code })}</span>
         <button
           type="button"
           onClick={removeCoupon}
-          aria-label="Retirer le code promo"
+          aria-label={t("removePromo")}
           className="text-muted-foreground hover:text-foreground"
         >
           <X className="size-4" />
@@ -54,11 +54,11 @@ export function PromoCodeForm({ subtotal }: { subtotal: number }) {
         <Input
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          placeholder="Code promo"
-          aria-label="Code promo"
+          placeholder={t("promoPlaceholder")}
+          aria-label={t("promoPlaceholder")}
         />
         <Button type="submit" variant="outline" disabled={isPending || !code.trim()}>
-          {isPending ? "..." : "Appliquer"}
+          {isPending ? "..." : t("apply")}
         </Button>
       </div>
       {error && <p className="text-destructive text-sm">{error}</p>}

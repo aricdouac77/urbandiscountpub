@@ -1,18 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Minus, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore, type CartItem } from "@/features/cart/store/cart-store";
 
-function formatPrice(value: number) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(value);
-}
-
 export function CartItemRow({ item }: { item: CartItem }) {
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
+  const t = useTranslations("cart");
+  const locale = useLocale();
+
+  function formatPrice(value: number) {
+    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value);
+  }
 
   return (
     <div className="flex gap-4 border-b py-6">
@@ -30,13 +36,13 @@ export function CartItemRow({ item }: { item: CartItem }) {
               {item.name}
             </Link>
             {item.size && (
-              <p className="text-muted-foreground mt-1 text-xs">Taille : {item.size}</p>
+              <p className="text-muted-foreground mt-1 text-xs">{t("size", { size: item.size })}</p>
             )}
           </div>
           <button
             type="button"
             onClick={() => removeItem(item.variantId)}
-            aria-label="Retirer du panier"
+            aria-label={t("removeItem")}
             className="text-muted-foreground hover:text-foreground"
           >
             <X className="size-4" />
@@ -51,7 +57,7 @@ export function CartItemRow({ item }: { item: CartItem }) {
               size="icon"
               className="size-8"
               onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
-              aria-label="Diminuer la quantité"
+              aria-label={t("decreaseQuantity")}
             >
               <Minus className="size-3.5" />
             </Button>
@@ -62,7 +68,7 @@ export function CartItemRow({ item }: { item: CartItem }) {
               size="icon"
               className="size-8"
               onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
-              aria-label="Augmenter la quantité"
+              aria-label={t("increaseQuantity")}
             >
               <Plus className="size-3.5" />
             </Button>

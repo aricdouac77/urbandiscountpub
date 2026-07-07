@@ -1,21 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { OrderStatusBadge } from "@/features/orders/components/order-status-badge";
 import { trackOrder, type TrackOrderResult } from "@/actions/tracking.actions";
 
-function formatPrice(value: number) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(value);
-}
-
 export function OrderTrackingForm() {
   const [orderNumber, setOrderNumber] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<TrackOrderResult | null>(null);
+  const t = useTranslations("search");
+  const tCart = useTranslations("cart");
+  const locale = useLocale();
+
+  function formatPrice(value: number) {
+    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value);
+  }
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -29,7 +36,7 @@ export function OrderTrackingForm() {
     <div className="mx-auto max-w-lg">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="orderNumber">Numéro de commande</Label>
+          <Label htmlFor="orderNumber">{t("orderNumberLabel")}</Label>
           <Input
             id="orderNumber"
             value={orderNumber}
@@ -39,7 +46,7 @@ export function OrderTrackingForm() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">E-mail utilisé lors de la commande</Label>
+          <Label htmlFor="email">{t("orderEmailLabel")}</Label>
           <Input
             id="email"
             type="email"
@@ -49,7 +56,7 @@ export function OrderTrackingForm() {
           />
         </div>
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Recherche..." : "Suivre ma commande"}
+          {isSubmitting ? t("tracking") : t("trackButton")}
         </Button>
       </form>
 
@@ -61,9 +68,9 @@ export function OrderTrackingForm() {
             <div>
               <p className="font-medium">{result.order.orderNumber}</p>
               <p className="text-muted-foreground text-sm">
-                {new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(
-                  result.order.createdAt,
-                )}
+                {new Intl.DateTimeFormat(locale === "en" ? "en-US" : "fr-FR", {
+                  dateStyle: "long",
+                }).format(result.order.createdAt)}
               </p>
             </div>
             <OrderStatusBadge status={result.order.status} />
@@ -71,12 +78,14 @@ export function OrderTrackingForm() {
 
           {result.order.shipment && (
             <div className="border-t pt-4 text-sm">
-              <p className="font-medium">Expédition</p>
+              <p className="font-medium">{t("shipmentLabel")}</p>
               {result.order.shipment.carrier && (
-                <p>Transporteur : {result.order.shipment.carrier}</p>
+                <p>{t("carrierLabel", { carrier: result.order.shipment.carrier })}</p>
               )}
               {result.order.shipment.trackingNumber && (
-                <p>Numéro de suivi : {result.order.shipment.trackingNumber}</p>
+                <p>
+                  {t("trackingNumberLabel", { number: result.order.shipment.trackingNumber })}
+                </p>
               )}
             </div>
           )}
@@ -93,7 +102,7 @@ export function OrderTrackingForm() {
           </div>
 
           <div className="flex justify-between border-t pt-4 text-base font-semibold">
-            <span>Total</span>
+            <span>{tCart("total")}</span>
             <span>{formatPrice(Number(result.order.total))}</span>
           </div>
         </div>

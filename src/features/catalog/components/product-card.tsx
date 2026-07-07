@@ -1,15 +1,21 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { WishlistButton } from "@/features/wishlist/components/wishlist-button";
 import type { ProductCardData } from "@/features/catalog/types/product-card";
 
-function formatPrice(value: number) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(value);
-}
-
 export function ProductCard({ product }: { product: ProductCardData }) {
   const hasDiscount = product.compareAtPrice !== null && product.compareAtPrice > product.price;
+  const t = useTranslations("product");
+  const locale = useLocale();
+
+  function formatPrice(value: number) {
+    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value);
+  }
 
   return (
     <Link href={`/produits/${product.slug}`} className="group block">
@@ -23,11 +29,11 @@ export function ProductCard({ product }: { product: ProductCardData }) {
         />
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
           {product.isNewArrival && (
-            <Badge className="bg-brand text-brand-foreground border-0">Nouveau</Badge>
+            <Badge className="bg-brand text-brand-foreground border-0">{t("new")}</Badge>
           )}
           {hasDiscount && (
             <Badge variant="destructive" className="border-0">
-              Promo
+              {t("sale")}
             </Badge>
           )}
         </div>

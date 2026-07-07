@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -21,6 +22,7 @@ import { contactSchema, type ContactInput } from "@/features/contact/schemas/con
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const t = useTranslations("product");
 
   const form = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
@@ -37,17 +39,13 @@ export function ContactForm() {
       return;
     }
 
-    toast.success("Message envoyé, nous vous répondrons rapidement.");
+    toast.success(t("contactSuccessToast"));
     setSubmitted(true);
     form.reset();
   }
 
   if (submitted) {
-    return (
-      <p className="text-muted-foreground text-sm">
-        Merci, votre message a bien été envoyé. Notre équipe vous répondra sous 24 à 48h.
-      </p>
-    );
+    return <p className="text-muted-foreground text-sm">{t("contactSuccessBody")}</p>;
   }
 
   return (
@@ -59,7 +57,7 @@ export function ContactForm() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom</FormLabel>
+                <FormLabel>{t("contactName")}</FormLabel>
                 <FormControl>
                   <Input autoComplete="name" {...field} />
                 </FormControl>
@@ -72,7 +70,7 @@ export function ContactForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>E-mail</FormLabel>
+                <FormLabel>{t("contactEmail")}</FormLabel>
                 <FormControl>
                   <Input type="email" autoComplete="email" {...field} />
                 </FormControl>
@@ -86,7 +84,7 @@ export function ContactForm() {
           name="subject"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sujet</FormLabel>
+              <FormLabel>{t("contactSubject")}</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -99,7 +97,7 @@ export function ContactForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Message</FormLabel>
+              <FormLabel>{t("contactMessage")}</FormLabel>
               <FormControl>
                 <Textarea rows={6} {...field} />
               </FormControl>
@@ -108,7 +106,7 @@ export function ContactForm() {
           )}
         />
         <Button type="submit" size="lg" disabled={isSubmitting}>
-          {isSubmitting ? "Envoi..." : "Envoyer le message"}
+          {isSubmitting ? t("contactSending") : t("contactSend")}
         </Button>
       </form>
     </Form>

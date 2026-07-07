@@ -1,20 +1,26 @@
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { localize } from "@/lib/locale-content";
+import type { Locale } from "@/i18n/routing";
 import type { ProductCardData } from "@/features/catalog/types/product-card";
 import type { Product, ProductImage } from "@/generated/prisma/client";
 
 const PLACEHOLDER_IMAGE = "https://picsum.photos/seed/urbandiscount-fallback/900/1125";
 
-function toProductCard(product: Product & { images: ProductImage[] }): ProductCardData {
+function toProductCard(
+  product: Product & { images: ProductImage[] },
+  locale: Locale,
+): ProductCardData {
   const primaryImage = product.images[0];
+  const name = localize(product.name, product.nameEn, locale);
 
   return {
     id: product.id,
     slug: product.slug,
-    name: product.name,
+    name,
     brand: product.brand,
     imageUrl: primaryImage?.url ?? PLACEHOLDER_IMAGE,
-    imageAlt: primaryImage?.alt ?? product.name,
+    imageAlt: primaryImage?.alt ?? name,
     price: Number(product.basePrice),
     compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
     isNewArrival: product.isNewArrival,
@@ -27,42 +33,42 @@ const CARD_IMAGE_SELECT = {
 };
 
 export const getFeaturedProducts = unstable_cache(
-  async (limit = 8): Promise<ProductCardData[]> => {
+  async (locale: Locale, limit = 8): Promise<ProductCardData[]> => {
     const products = await prisma.product.findMany({
       where: { status: "ACTIVE", isFeatured: true },
       include: CARD_IMAGE_SELECT,
       take: limit,
       orderBy: { createdAt: "desc" },
     });
-    return products.map(toProductCard);
+    return products.map((product) => toProductCard(product, locale));
   },
   ["home-featured-products"],
   { revalidate: 300, tags: ["products"] },
 );
 
 export const getBestSellers = unstable_cache(
-  async (limit = 8): Promise<ProductCardData[]> => {
+  async (locale: Locale, limit = 8): Promise<ProductCardData[]> => {
     const products = await prisma.product.findMany({
       where: { status: "ACTIVE", isBestSeller: true },
       include: CARD_IMAGE_SELECT,
       take: limit,
       orderBy: { createdAt: "desc" },
     });
-    return products.map(toProductCard);
+    return products.map((product) => toProductCard(product, locale));
   },
   ["home-best-sellers"],
   { revalidate: 300, tags: ["products"] },
 );
 
 export const getNewArrivals = unstable_cache(
-  async (limit = 8): Promise<ProductCardData[]> => {
+  async (locale: Locale, limit = 8): Promise<ProductCardData[]> => {
     const products = await prisma.product.findMany({
       where: { status: "ACTIVE", isNewArrival: true },
       include: CARD_IMAGE_SELECT,
       take: limit,
       orderBy: { createdAt: "desc" },
     });
-    return products.map(toProductCard);
+    return products.map((product) => toProductCard(product, locale));
   },
   ["home-new-arrivals"],
   { revalidate: 300, tags: ["products"] },
@@ -76,7 +82,7 @@ export type CollectionCardData = {
 };
 
 export const getFeaturedCollections = unstable_cache(
-  async (limit = 4): Promise<CollectionCardData[]> => {
+  async (locale: Locale, limit = 4): Promise<CollectionCardData[]> => {
     const collections = await prisma.collection.findMany({
       where: { isFeatured: true },
       take: limit,
@@ -85,7 +91,7 @@ export const getFeaturedCollections = unstable_cache(
     return collections.map((collection) => ({
       id: collection.id,
       slug: collection.slug,
-      name: collection.name,
+      name: localize(collection.name, collection.nameEn, locale),
       imageUrl: collection.image ?? PLACEHOLDER_IMAGE,
     }));
   },
@@ -100,13 +106,17 @@ export type CategoryNavData = {
 };
 
 export const getNavCategories = unstable_cache(
-  async (): Promise<CategoryNavData[]> => {
+  async (locale: Locale): Promise<CategoryNavData[]> => {
     const categories = await prisma.category.findMany({
       where: { parentId: null },
       orderBy: { position: "asc" },
-      select: { id: true, slug: true, name: true },
+      select: { id: true, slug: true, name: true, nameEn: true },
     });
-    return categories;
+    return categories.map((category) => ({
+      id: category.id,
+      slug: category.slug,
+      name: localize(category.name, category.nameEn, locale),
+    }));
   },
   ["nav-categories"],
   { revalidate: 300, tags: ["categories"] },

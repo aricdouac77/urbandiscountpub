@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { ArrowRight } from "lucide-react";
 import { ProductCard } from "@/features/catalog/components/product-card";
 import type { ProductCardData } from "@/features/catalog/types/product-card";
@@ -11,6 +12,8 @@ type ProductGridSectionProps = {
 };
 
 export function ProductGridSection({ title, subtitle, href, products }: ProductGridSectionProps) {
+  const t = useTranslations("home");
+
   if (products.length === 0) {
     return null;
   }
@@ -27,7 +30,7 @@ export function ProductGridSection({ title, subtitle, href, products }: ProductG
             href={href}
             className="group hidden shrink-0 items-center gap-1 text-sm font-medium sm:flex"
           >
-            Voir tout
+            {t("viewAll")}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         )}

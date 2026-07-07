@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -27,6 +28,7 @@ type ProfileFormProps = {
 
 export function ProfileForm({ defaultValues, email }: ProfileFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const t = useTranslations("account");
 
   const form = useForm<UpdateProfileInput>({
     resolver: zodResolver(updateProfileSchema),
@@ -43,14 +45,14 @@ export function ProfileForm({ defaultValues, email }: ProfileFormProps) {
       return;
     }
 
-    toast.success("Profil mis à jour");
+    toast.success(t("profileUpdated"));
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-md space-y-5">
         <div className="space-y-2">
-          <label className="text-sm font-medium">E-mail</label>
+          <label className="text-sm font-medium">{t("email")}</label>
           <Input value={email} disabled />
         </div>
 
@@ -59,7 +61,7 @@ export function ProfileForm({ defaultValues, email }: ProfileFormProps) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom complet</FormLabel>
+              <FormLabel>{t("fullName")}</FormLabel>
               <FormControl>
                 <Input autoComplete="name" {...field} />
               </FormControl>
@@ -73,7 +75,7 @@ export function ProfileForm({ defaultValues, email }: ProfileFormProps) {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Téléphone (optionnel)</FormLabel>
+              <FormLabel>{t("phone")}</FormLabel>
               <FormControl>
                 <Input autoComplete="tel" {...field} />
               </FormControl>
@@ -83,7 +85,7 @@ export function ProfileForm({ defaultValues, email }: ProfileFormProps) {
         />
 
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Enregistrement..." : "Enregistrer"}
+          {isSubmitting ? t("saving") : t("save")}
         </Button>
       </form>
     </Form>

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Search, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,15 +17,20 @@ import {
 } from "@/components/ui/command";
 import { getTrendingSearches, searchProductsPreview } from "@/actions/search.actions";
 
-function formatPrice(value: number) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(value);
-}
-
 export function SearchTrigger() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const router = useRouter();
+  const t = useTranslations("search");
+  const locale = useLocale();
+
+  function formatPrice(value: number) {
+    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value);
+  }
 
   useEffect(() => {
     const timeout = setTimeout(() => setDebouncedQuery(query), 250);
@@ -63,25 +69,21 @@ export function SearchTrigger() {
 
   return (
     <>
-      <Button variant="ghost" size="icon" aria-label="Rechercher" onClick={() => setOpen(true)}>
+      <Button variant="ghost" size="icon" aria-label={t("trigger")} onClick={() => setOpen(true)}>
         <Search className="size-5" />
       </Button>
       <CommandDialog
         open={open}
         onOpenChange={setOpen}
-        title="Rechercher"
-        description="Rechercher un produit"
+        title={t("dialogTitle")}
+        description={t("dialogDescription")}
       >
         <form onSubmit={handleSubmit}>
-          <CommandInput
-            placeholder="Rechercher un produit, une marque..."
-            value={query}
-            onValueChange={setQuery}
-          />
+          <CommandInput placeholder={t("placeholder")} value={query} onValueChange={setQuery} />
         </form>
         <CommandList>
           {query.trim().length < 2 && trending.length > 0 && (
-            <CommandGroup heading="Recherches populaires">
+            <CommandGroup heading={t("trending")}>
               {trending.map((term) => (
                 <CommandItem
                   key={term}
@@ -96,13 +98,13 @@ export function SearchTrigger() {
             </CommandGroup>
           )}
           {query.trim().length < 2 && trending.length === 0 && (
-            <CommandEmpty>Tapez au moins 2 caractères pour rechercher.</CommandEmpty>
+            <CommandEmpty>{t("minChars")}</CommandEmpty>
           )}
           {query.trim().length >= 2 && !isFetching && results.length === 0 && (
-            <CommandEmpty>Aucun résultat pour « {query} ».</CommandEmpty>
+            <CommandEmpty>{t("noResults", { query })}</CommandEmpty>
           )}
           {results.length > 0 && (
-            <CommandGroup heading="Produits">
+            <CommandGroup heading={t("products")}>
               {results.map((product) => (
                 <CommandItem
                   key={product.id}
@@ -134,7 +136,7 @@ export function SearchTrigger() {
                 onSelect={() => goToSearchPage()}
                 className="text-muted-foreground text-sm"
               >
-                Voir tous les résultats pour « {query} »
+                {t("viewAllResults", { query })}
               </CommandItem>
             </CommandGroup>
           )}

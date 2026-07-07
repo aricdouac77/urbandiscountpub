@@ -15,50 +15,84 @@ function img(seed: string, width = 900, height = 1125) {
 
 type SeedCategory = {
   name: string;
+  nameEn: string;
   slug: string;
   description: string;
+  descriptionEn: string;
   parent?: string;
 };
 
 const CATEGORIES: SeedCategory[] = [
-  { name: "Sneakers", slug: "sneakers", description: "Sneakers premium à prix discount." },
+  {
+    name: "Sneakers",
+    nameEn: "Sneakers",
+    slug: "sneakers",
+    description: "Sneakers premium à prix discount.",
+    descriptionEn: "Premium sneakers at discount prices.",
+  },
   {
     name: "Running",
+    nameEn: "Running",
     slug: "sneakers-running",
     description: "Amorti et performance pour la ville comme pour le sentier.",
+    descriptionEn: "Cushioning and performance for the city and the trail alike.",
     parent: "sneakers",
   },
   {
     name: "Lifestyle",
+    nameEn: "Lifestyle",
     slug: "sneakers-lifestyle",
     description: "Silhouettes intemporelles pour un usage quotidien.",
+    descriptionEn: "Timeless silhouettes for everyday wear.",
     parent: "sneakers",
   },
-  { name: "Vêtements", slug: "vetements", description: "Streetwear et essentiels du quotidien." },
+  {
+    name: "Vêtements",
+    nameEn: "Clothing",
+    slug: "vetements",
+    description: "Streetwear et essentiels du quotidien.",
+    descriptionEn: "Streetwear and everyday essentials.",
+  },
   {
     name: "Hauts",
+    nameEn: "Tops",
     slug: "vetements-hauts",
     description: "Sweats, t-shirts, chemises et vestes.",
+    descriptionEn: "Sweatshirts, t-shirts, shirts and jackets.",
     parent: "vetements",
   },
   {
     name: "Bas",
+    nameEn: "Bottoms",
     slug: "vetements-bas",
     description: "Pantalons cargo, joggers et shorts techniques.",
+    descriptionEn: "Cargo pants, joggers and technical shorts.",
     parent: "vetements",
   },
   {
     name: "Accessoires",
+    nameEn: "Accessories",
     slug: "accessoires",
     description: "Sacs, casquettes et petite maroquinerie.",
+    descriptionEn: "Bags, caps and small leather goods.",
   },
 ];
 
 const COLLECTIONS = [
-  { name: "Nouveautés", slug: "nouveautes", isFeatured: true },
-  { name: "Meilleures ventes", slug: "meilleures-ventes", isFeatured: true },
-  { name: "Soldes", slug: "soldes", isFeatured: false },
-  { name: "Édition limitée", slug: "edition-limitee", isFeatured: true },
+  { name: "Nouveautés", nameEn: "New Arrivals", slug: "nouveautes", isFeatured: true },
+  {
+    name: "Meilleures ventes",
+    nameEn: "Best Sellers",
+    slug: "meilleures-ventes",
+    isFeatured: true,
+  },
+  { name: "Soldes", nameEn: "Sale", slug: "soldes", isFeatured: false },
+  {
+    name: "Édition limitée",
+    nameEn: "Limited Edition",
+    slug: "edition-limitee",
+    isFeatured: true,
+  },
 ] as const;
 
 const COUPONS = [
@@ -100,6 +134,7 @@ type ColorDef = { name: string; hex: string };
 
 type SeedProduct = {
   name: string;
+  nameEn: string;
   slug: string;
   category: string;
   collections: (typeof COLLECTIONS)[number]["slug"][];
@@ -112,8 +147,11 @@ type SeedProduct = {
   sizes: string[];
   colors?: ColorDef[];
   materials?: string;
+  materialsEn?: string;
   careInstructions?: string;
+  careInstructionsEn?: string;
   description: string;
+  descriptionEn: string;
 };
 
 const SHOE_SIZES = ["38", "39", "40", "41", "42", "43", "44", "45"];
@@ -123,6 +161,7 @@ const PRODUCTS: SeedProduct[] = [
   // ── Sneakers / Running ──
   {
     name: "Runner Court Low",
+    nameEn: "Runner Court Low",
     slug: "runner-court-low",
     category: "sneakers-running",
     collections: ["nouveautes", "meilleures-ventes"],
@@ -137,12 +176,17 @@ const PRODUCTS: SeedProduct[] = [
       { name: "Blanc", hex: "#F5F5F5" },
     ],
     materials: "Tige en cuir pleine fleur, semelle en gomme durable",
+    materialsEn: "Full-grain leather upper, durable rubber sole",
     careInstructions: "Nettoyer avec un chiffon humide, ne pas laver en machine",
+    careInstructionsEn: "Clean with a damp cloth, do not machine wash",
     description:
       "Une silhouette basse épurée en cuir pleine fleur, semelle en gomme durable et doublure respirante. Le compagnon quotidien pensé pour durer.",
+    descriptionEn:
+      "A clean low-top silhouette in full-grain leather, with a durable rubber sole and breathable lining. The everyday companion built to last.",
   },
   {
     name: "Trail Max 2.0",
+    nameEn: "Trail Max 2.0",
     slug: "trail-max-2-0",
     category: "sneakers-running",
     collections: ["nouveautes"],
@@ -155,11 +199,15 @@ const PRODUCTS: SeedProduct[] = [
       { name: "Orange", hex: "#C2410C" },
     ],
     materials: "Tige en mesh technique, semelle EVA à mémoire de forme",
+    materialsEn: "Technical mesh upper, memory-foam EVA sole",
     description:
       "Amorti haute performance et grip renforcé pour la ville comme pour le sentier. Tige en mesh technique et maintien latéral optimisé.",
+    descriptionEn:
+      "High-performance cushioning and reinforced grip for the city and the trail alike. Technical mesh upper with optimized lateral support.",
   },
   {
     name: "Sprint Pro Knit",
+    nameEn: "Sprint Pro Knit",
     slug: "sprint-pro-knit",
     category: "sneakers-running",
     collections: ["nouveautes"],
@@ -169,13 +217,17 @@ const PRODUCTS: SeedProduct[] = [
     sizes: SHOE_SIZES.slice(0, 6),
     colors: [{ name: "Bleu Marine", hex: "#1B2A4A" }],
     materials: "Tricot respirant sans couture, semelle légère",
+    materialsEn: "Seamless breathable knit, lightweight sole",
     description:
       "Conçue pour l'entraînement intensif, la Sprint Pro Knit offre un chaussant enveloppant et une respirabilité maximale grâce à sa tige tricotée sans couture.",
+    descriptionEn:
+      "Built for intensive training, the Sprint Pro Knit offers a sock-like fit and maximum breathability thanks to its seamless knit upper.",
   },
 
   // ── Sneakers / Lifestyle ──
   {
     name: "Classic Court White",
+    nameEn: "Classic Court White",
     slug: "classic-court-white",
     category: "sneakers-lifestyle",
     collections: ["meilleures-ventes"],
@@ -185,10 +237,13 @@ const PRODUCTS: SeedProduct[] = [
     sizes: SHOE_SIZES.slice(0, 6),
     colors: [{ name: "Blanc", hex: "#F5F5F5" }],
     materials: "Cuir souple, coutures renforcées",
+    materialsEn: "Soft leather, reinforced stitching",
     description: "L'intemporelle sneaker blanche minimaliste. Cuir souple, coutures renforcées.",
+    descriptionEn: "The timeless minimalist white sneaker. Soft leather, reinforced stitching.",
   },
   {
     name: "Sneaker Slip-On Knit",
+    nameEn: "Slip-On Knit Sneaker",
     slug: "sneaker-slip-on-knit",
     category: "sneakers-lifestyle",
     collections: ["soldes"],
@@ -199,9 +254,11 @@ const PRODUCTS: SeedProduct[] = [
     colors: [{ name: "Noir", hex: "#111111" }],
     description:
       "Sneaker sans lacet en maille tricotée extensible, semelle légère à mémoire de forme.",
+    descriptionEn: "Laceless sneaker in stretch knit, lightweight memory-foam sole.",
   },
   {
     name: "Retro High Top",
+    nameEn: "Retro High Top",
     slug: "retro-high-top",
     category: "sneakers-lifestyle",
     collections: ["edition-limitee"],
@@ -215,13 +272,17 @@ const PRODUCTS: SeedProduct[] = [
       { name: "Vert Kaki", hex: "#4B5320" },
     ],
     materials: "Cuir nubuck, col matelassé",
+    materialsEn: "Nubuck leather, padded collar",
     description:
       "Silhouette montante inspirée des classiques des années 90, en cuir nubuck avec col matelassé pour un maintien optimal de la cheville.",
+    descriptionEn:
+      "A high-top silhouette inspired by '90s classics, in nubuck leather with a padded collar for optimal ankle support.",
   },
 
   // ── Vêtements / Hauts ──
   {
     name: "Hoodie Essential",
+    nameEn: "Essential Hoodie",
     slug: "hoodie-essential",
     category: "vetements-hauts",
     collections: ["meilleures-ventes"],
@@ -231,12 +292,17 @@ const PRODUCTS: SeedProduct[] = [
     isBestSeller: true,
     sizes: APPAREL_SIZES,
     materials: "Molleton 400g/m², 80% coton, 20% polyester",
+    materialsEn: "400g/m² fleece, 80% cotton, 20% polyester",
     careInstructions: "Lavage machine 30°C, ne pas repasser le flocage",
+    careInstructionsEn: "Machine wash at 30°C, do not iron over the print",
     description:
       "Sweat à capuche en molleton épais 400g/m², coupe oversize, poche kangourou. Le basique premium de la garde-robe urbaine.",
+    descriptionEn:
+      "Hoodie in thick 400g/m² fleece, oversized fit, kangaroo pocket. The premium basic of the urban wardrobe.",
   },
   {
     name: "Tee Oversize Structuré",
+    nameEn: "Structured Oversize Tee",
     slug: "tee-oversize-structure",
     category: "vetements-hauts",
     collections: ["nouveautes"],
@@ -245,10 +311,14 @@ const PRODUCTS: SeedProduct[] = [
     isNewArrival: true,
     sizes: APPAREL_SIZES,
     materials: "Coton lourd 240g/m²",
+    materialsEn: "240g/m² heavyweight cotton",
     description: "T-shirt en coton lourd 240g, coupe droite structurée, col renforcé anti-détente.",
+    descriptionEn:
+      "T-shirt in 240g heavyweight cotton, structured straight fit, reinforced collar that won't stretch out.",
   },
   {
     name: "Crewneck Heavyweight",
+    nameEn: "Heavyweight Crewneck",
     slug: "crewneck-heavyweight",
     category: "vetements-hauts",
     collections: ["nouveautes"],
@@ -257,11 +327,15 @@ const PRODUCTS: SeedProduct[] = [
     isNewArrival: true,
     sizes: APPAREL_SIZES,
     materials: "Molleton gratté 380g/m²",
+    materialsEn: "380g/m² brushed fleece",
     description:
       "Sweat col rond épais, coupe droite, bords-côtes renforcés. Un essentiel pour la mi-saison.",
+    descriptionEn:
+      "Thick crewneck sweatshirt, straight fit, reinforced ribbing. A mid-season essential.",
   },
   {
     name: "Chemise Overshirt Utility",
+    nameEn: "Utility Overshirt",
     slug: "chemise-overshirt-utility",
     category: "vetements-hauts",
     collections: ["nouveautes", "edition-limitee"],
@@ -270,11 +344,15 @@ const PRODUCTS: SeedProduct[] = [
     isNewArrival: true,
     sizes: APPAREL_SIZES,
     materials: "Coton sergé épais, poches plaquées",
+    materialsEn: "Heavy cotton twill, patch pockets",
     description:
       "Surchemise workwear en coton sergé, poches plaquées et boutonnage complet. Se porte seule ou en surcouche.",
+    descriptionEn:
+      "Workwear overshirt in cotton twill, patch pockets and full button-through front. Worn alone or as a layering piece.",
   },
   {
     name: "Bomber Réversible",
+    nameEn: "Reversible Bomber",
     slug: "bomber-reversible",
     category: "vetements-hauts",
     collections: ["soldes"],
@@ -283,12 +361,15 @@ const PRODUCTS: SeedProduct[] = [
     compareAtPrice: 149.9,
     sizes: APPAREL_SIZES,
     materials: "Doublure rembourrée, finitions bord-côte",
+    materialsEn: "Padded lining, ribbed trims",
     description: "Blouson bomber réversible, doublure rembourrée, finitions bord-côte premium.",
+    descriptionEn: "Reversible bomber jacket, padded lining, premium ribbed trims.",
   },
 
   // ── Vêtements / Bas ──
   {
     name: "Cargo Pant Technique",
+    nameEn: "Technical Cargo Pant",
     slug: "cargo-pant-technique",
     category: "vetements-bas",
     collections: ["nouveautes", "soldes"],
@@ -298,11 +379,15 @@ const PRODUCTS: SeedProduct[] = [
     isNewArrival: true,
     sizes: ["38", "40", "42", "44", "46"],
     materials: "Twill stretch, multipoches",
+    materialsEn: "Stretch twill, multiple pockets",
     description:
       "Pantalon cargo en twill stretch, multipoches, cheville resserrée, coupe contemporaine.",
+    descriptionEn:
+      "Cargo pants in stretch twill, multiple pockets, tapered ankle, contemporary fit.",
   },
   {
     name: "Jogger Tapered Tech",
+    nameEn: "Tapered Tech Jogger",
     slug: "jogger-tapered-tech",
     category: "vetements-bas",
     collections: ["meilleures-ventes"],
@@ -311,11 +396,15 @@ const PRODUCTS: SeedProduct[] = [
     isBestSeller: true,
     sizes: APPAREL_SIZES,
     materials: "Molleton technique déperlant",
+    materialsEn: "Water-repellent technical fleece",
     description:
       "Jogger fuselé en molleton technique déperlant, taille élastiquée, poches zippées sécurisées.",
+    descriptionEn:
+      "Tapered joggers in water-repellent technical fleece, elastic waistband, secure zip pockets.",
   },
   {
     name: "Short Cargo Utility",
+    nameEn: "Utility Cargo Short",
     slug: "short-cargo-utility",
     category: "vetements-bas",
     collections: ["nouveautes"],
@@ -324,11 +413,14 @@ const PRODUCTS: SeedProduct[] = [
     isNewArrival: true,
     sizes: ["38", "40", "42", "44"],
     description: "Short cargo multipoches en coton ripstop, ceinture ajustable, coupe relâchée.",
+    descriptionEn:
+      "Multi-pocket cargo shorts in cotton ripstop, adjustable waist, relaxed fit.",
   },
 
   // ── Accessoires ──
   {
     name: "Casquette Signature",
+    nameEn: "Signature Cap",
     slug: "casquette-signature",
     category: "accessoires",
     collections: ["meilleures-ventes"],
@@ -338,9 +430,12 @@ const PRODUCTS: SeedProduct[] = [
     sizes: ["Unique"],
     description:
       "Casquette 6 panneaux en coton brossé, broderie signature, sangle ajustable laiton.",
+    descriptionEn:
+      "6-panel cap in brushed cotton, signature embroidery, adjustable brass strap.",
   },
   {
     name: "Sac Banane Utility",
+    nameEn: "Utility Belt Bag",
     slug: "sac-banane-utility",
     category: "accessoires",
     collections: ["nouveautes"],
@@ -349,11 +444,15 @@ const PRODUCTS: SeedProduct[] = [
     isNewArrival: true,
     sizes: ["Unique"],
     materials: "Nylon ripstop déperlant",
+    materialsEn: "Water-repellent ripstop nylon",
     description:
       "Sac banane en nylon ripstop déperlant, compartiments multiples, bandoulière réglable.",
+    descriptionEn:
+      "Belt bag in water-repellent ripstop nylon, multiple compartments, adjustable strap.",
   },
   {
     name: "Ceinture Cuir Signature",
+    nameEn: "Signature Leather Belt",
     slug: "ceinture-cuir-signature",
     category: "accessoires",
     collections: ["nouveautes"],
@@ -362,10 +461,13 @@ const PRODUCTS: SeedProduct[] = [
     isNewArrival: true,
     sizes: ["S/M", "L/XL"],
     materials: "Cuir pleine fleur, boucle laiton massif",
+    materialsEn: "Full-grain leather, solid brass buckle",
     description: "Ceinture en cuir pleine fleur, boucle en laiton massif gravée du logo.",
+    descriptionEn: "Full-grain leather belt, solid brass buckle engraved with the logo.",
   },
   {
     name: "Bonnet Côtelé",
+    nameEn: "Ribbed Beanie",
     slug: "bonnet-cotele",
     category: "accessoires",
     collections: ["soldes"],
@@ -374,9 +476,11 @@ const PRODUCTS: SeedProduct[] = [
     compareAtPrice: 32.9,
     sizes: ["Unique"],
     description: "Bonnet en maille côtelée épaisse, revers double épaisseur, patch signature.",
+    descriptionEn: "Beanie in thick ribbed knit, double-thickness cuff, signature patch.",
   },
   {
     name: "Pack Chaussettes x3",
+    nameEn: "3-Pack Socks",
     slug: "pack-chaussettes-x3",
     category: "accessoires",
     collections: ["meilleures-ventes"],
@@ -385,6 +489,7 @@ const PRODUCTS: SeedProduct[] = [
     isBestSeller: true,
     sizes: ["39-42", "43-46"],
     description: "Lot de 3 paires de chaussettes en coton peigné renforcé, tige mi-haute.",
+    descriptionEn: "Set of 3 pairs of socks in reinforced combed cotton, mid-calf length.",
   },
 ];
 
@@ -426,6 +531,10 @@ const REVIEW_COMMENTS = [
   },
 ] as const;
 
+// Reviews are seed/demo content, kept French-only for now (no localized
+// storage in the Review model) — the storefront UI chrome around them is
+// translated, but review text itself isn't part of the Phase 2 content scope.
+
 async function main() {
   console.log("Seeding database…");
 
@@ -462,11 +571,13 @@ async function main() {
   for (const [index, category] of topLevel.entries()) {
     const record = await prisma.category.upsert({
       where: { slug: category.slug },
-      update: {},
+      update: { nameEn: category.nameEn, descriptionEn: category.descriptionEn },
       create: {
         name: category.name,
+        nameEn: category.nameEn,
         slug: category.slug,
         description: category.description,
+        descriptionEn: category.descriptionEn,
         image: img(`category-${category.slug}`, 1200, 800),
         position: index,
       },
@@ -477,11 +588,13 @@ async function main() {
   for (const [index, category] of children.entries()) {
     const record = await prisma.category.upsert({
       where: { slug: category.slug },
-      update: {},
+      update: { nameEn: category.nameEn, descriptionEn: category.descriptionEn },
       create: {
         name: category.name,
+        nameEn: category.nameEn,
         slug: category.slug,
         description: category.description,
+        descriptionEn: category.descriptionEn,
         image: img(`category-${category.slug}`, 1200, 800),
         position: index,
         parentId: categoryBySlug.get(category.parent!),
@@ -494,9 +607,10 @@ async function main() {
   for (const collection of COLLECTIONS) {
     const record = await prisma.collection.upsert({
       where: { slug: collection.slug },
-      update: {},
+      update: { nameEn: collection.nameEn },
       create: {
         name: collection.name,
+        nameEn: collection.nameEn,
         slug: collection.slug,
         isFeatured: collection.isFeatured,
         image: img(`collection-${collection.slug}`, 1200, 800),
@@ -513,12 +627,21 @@ async function main() {
 
     const created = await prisma.product.upsert({
       where: { slug: product.slug },
-      update: {},
+      update: {
+        nameEn: product.nameEn,
+        descriptionEn: product.descriptionEn,
+        shortDescriptionEn: product.descriptionEn.slice(0, 90),
+        materialsEn: product.materialsEn,
+        careInstructionsEn: product.careInstructionsEn,
+      },
       create: {
         name: product.name,
+        nameEn: product.nameEn,
         slug: product.slug,
         description: product.description,
+        descriptionEn: product.descriptionEn,
         shortDescription: product.description.slice(0, 90),
+        shortDescriptionEn: product.descriptionEn.slice(0, 90),
         brand: product.brand,
         status: "ACTIVE",
         basePrice: product.basePrice,
@@ -527,7 +650,9 @@ async function main() {
         isBestSeller: product.isBestSeller ?? false,
         isNewArrival: product.isNewArrival ?? false,
         materials: product.materials,
+        materialsEn: product.materialsEn,
         careInstructions: product.careInstructions,
+        careInstructionsEn: product.careInstructionsEn,
         categoryId: categoryBySlug.get(product.category),
         collections: {
           create: product.collections.map((slug) => ({

@@ -1,6 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import NextLink from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +22,7 @@ import { SignOutButton } from "@/features/auth/components/sign-out-button";
 // route to render dynamically on every request.
 export function UserMenu() {
   const { data: session, isPending } = useSession();
+  const t = useTranslations("nav");
 
   if (isPending) {
     return <Button variant="ghost" size="icon" aria-hidden className="opacity-0" />;
@@ -27,7 +30,7 @@ export function UserMenu() {
 
   if (!session) {
     return (
-      <Button variant="ghost" size="icon" aria-label="Se connecter" asChild>
+      <Button variant="ghost" size="icon" aria-label={t("signIn")} asChild>
         <Link href="/connexion">
           <User className="size-5" />
         </Link>
@@ -40,7 +43,7 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Mon compte">
+        <Button variant="ghost" size="icon" aria-label={t("myAccount")}>
           <User className="size-5" />
         </Button>
       </DropdownMenuTrigger>
@@ -48,17 +51,17 @@ export function UserMenu() {
         <DropdownMenuLabel className="truncate">{session.user.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/compte">Mon compte</Link>
+          <Link href="/compte">{t("myAccount")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/compte/commandes">Mes commandes</Link>
+          <Link href="/compte/commandes">{t("orders")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/wishlist">Ma liste d&apos;envies</Link>
+          <Link href="/wishlist">{t("wishlist")}</Link>
         </DropdownMenuItem>
         {isAdmin && (
           <DropdownMenuItem asChild>
-            <Link href="/admin">Administration</Link>
+            <NextLink href="/admin">Administration</NextLink>
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToggleWishlist, useWishlistIds } from "@/features/wishlist/hooks/use-wishlist";
@@ -13,6 +14,7 @@ type WishlistButtonProps = {
 export function WishlistButton({ productId, className, variant = "overlay" }: WishlistButtonProps) {
   const { data: wishlistIds } = useWishlistIds();
   const toggle = useToggleWishlist();
+  const t = useTranslations("wishlist");
 
   const isWishlisted = wishlistIds?.includes(productId) ?? false;
 
@@ -26,7 +28,7 @@ export function WishlistButton({ productId, className, variant = "overlay" }: Wi
     <button
       type="button"
       onClick={handleClick}
-      aria-label={isWishlisted ? "Retirer de la liste d'envies" : "Ajouter à la liste d'envies"}
+      aria-label={isWishlisted ? t("remove") : t("add")}
       aria-pressed={isWishlisted}
       className={cn(
         variant === "overlay" &&
@@ -42,8 +44,7 @@ export function WishlistButton({ productId, className, variant = "overlay" }: Wi
           isWishlisted ? "fill-brand text-brand" : "text-foreground",
         )}
       />
-      {variant === "inline" &&
-        (isWishlisted ? "Dans votre liste d'envies" : "Ajouter à la liste d'envies")}
+      {variant === "inline" && (isWishlisted ? t("inWishlist") : t("add"))}
     </button>
   );
 }

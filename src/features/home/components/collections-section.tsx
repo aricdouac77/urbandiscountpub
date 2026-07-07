@@ -1,15 +1,18 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import type { CollectionCardData } from "@/features/catalog/queries/get-home-sections";
 
 export function CollectionsSection({ collections }: { collections: CollectionCardData[] }) {
+  const t = useTranslations("home");
+
   if (collections.length === 0) {
     return null;
   }
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <h2 className="mb-8 text-2xl font-semibold sm:text-3xl">Nos collections</h2>
+      <h2 className="mb-8 text-2xl font-semibold sm:text-3xl">{t("collectionsTitle")}</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {collections.map((collection) => (
           <Link

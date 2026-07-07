@@ -1,16 +1,20 @@
-import Link from "next/link";
+import { getLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { getNavCategories } from "@/features/catalog/queries/get-home-sections";
+import type { Locale } from "@/i18n/routing";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { MainNav } from "@/components/layout/main-nav";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { SearchTrigger } from "@/components/layout/search-trigger";
 import { UserMenu } from "@/components/layout/user-menu";
+import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CartButton } from "@/features/cart/components/cart-button";
 import { WishlistHeaderButton } from "@/features/wishlist/components/wishlist-header-button";
 
 export async function SiteHeader() {
-  const categories = await getNavCategories();
+  const locale = (await getLocale()) as Locale;
+  const categories = await getNavCategories(locale);
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/80 sticky top-0 z-40 border-b backdrop-blur">
@@ -26,6 +30,7 @@ export async function SiteHeader() {
 
         <div className="ml-auto flex items-center gap-1">
           <SearchTrigger />
+          <LocaleSwitcher />
           <ThemeToggle />
           <WishlistHeaderButton />
           <CartButton />

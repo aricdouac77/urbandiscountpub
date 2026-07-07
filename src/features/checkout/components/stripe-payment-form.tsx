@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { getClientStripe } from "@/lib/stripe-client";
@@ -15,6 +16,8 @@ function PaymentFormInner({ orderNumber }: { orderNumber: string }) {
   const elements = useElements();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations("checkout");
+  const locale = useLocale();
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -26,12 +29,12 @@ function PaymentFormInner({ orderNumber }: { orderNumber: string }) {
     const { error: confirmError } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/checkout/confirmation?order=${orderNumber}`,
+        return_url: `${window.location.origin}/${locale}/checkout/confirmation?order=${orderNumber}`,
       },
     });
 
     if (confirmError) {
-      setError(confirmError.message ?? "Le paiement a échoué. Veuillez réessayer.");
+      setError(confirmError.message ?? t("paymentFailed"));
       setIsSubmitting(false);
     }
   }
@@ -41,7 +44,7 @@ function PaymentFormInner({ orderNumber }: { orderNumber: string }) {
       <PaymentElement />
       {error && <p className="text-destructive text-sm">{error}</p>}
       <Button type="submit" size="lg" className="w-full" disabled={!stripe || isSubmitting}>
-        {isSubmitting ? "Traitement..." : "Payer maintenant"}
+        {isSubmitting ? t("processing") : t("payNow")}
       </Button>
     </form>
   );
@@ -49,13 +52,10 @@ function PaymentFormInner({ orderNumber }: { orderNumber: string }) {
 
 export function StripePaymentForm({ clientSecret, orderNumber }: StripePaymentFormProps) {
   const stripePromise = getClientStripe();
+  const t = useTranslations("checkout");
 
   if (!stripePromise) {
-    return (
-      <p className="text-destructive text-sm">
-        Le paiement en ligne n&apos;est pas configuré (clé publique Stripe manquante).
-      </p>
-    );
+    return <p className="text-destructive text-sm">{t("paymentNotConfigured")}</p>;
   }
 
   return (
