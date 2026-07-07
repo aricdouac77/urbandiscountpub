@@ -160,6 +160,8 @@ type SeedProduct = {
   careInstructionsEn?: string;
   description: string;
   descriptionEn: string;
+  /** Real product image URLs, overriding the generated picsum placeholders. */
+  images?: string[];
 };
 
 const SHOE_SIZES = ["38", "39", "40", "41", "42", "43", "44", "45"];
@@ -395,6 +397,11 @@ const PRODUCTS: SeedProduct[] = [
       "Ensemble chemise oxford texturée et pantalon en lin-coton, taillé pour le bureau comme les événements formels.",
     descriptionEn:
       "Textured oxford shirt paired with linen-cotton pants, cut for the office and formal events alike.",
+    images: [
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2026-06-05at3.06.05PM_b2845d9d-7791-44fb-9e70-14f4e0171efd.jpg?v=1781776066",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2026-06-05at3.04.30PM.png?v=1780659511",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2026-06-05at3.32.18PM.png?v=1780659512",
+    ],
   },
   {
     name: "Ensemble Coordonné Weekend",
@@ -412,6 +419,11 @@ const PRODUCTS: SeedProduct[] = [
     description:
       "Ensemble coordonné en coton texturé premium, pensé pour les brunchs et sorties du soir.",
     descriptionEn: "Premium textured cotton co-ord set, made for brunches and dinner dates.",
+    images: [
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/Weekend_Linen_Sets_Men.jpg?v=1766734399",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2025-09-29at11.08.22AM.png?v=1763625125",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2025-09-29at11.09.33AM.png?v=1766734399",
+    ],
   },
   {
     name: "Ensemble Col Mao en Lin",
@@ -429,6 +441,11 @@ const PRODUCTS: SeedProduct[] = [
     description:
       "Ensemble col Mao en lin premium, tenue idéale pour la plage et les destinations resort.",
     descriptionEn: "Premium linen ban-collar set, an ideal beach and resort outfit.",
+    images: [
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/5_546c45f2-810e-4454-8145-4e2d7f04a260.jpg?v=1775399560",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/2_b92b3e9b-13ee-4638-949b-3e90a52b3bca.jpg?v=1775399560",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/4_90316d74-972b-4d48-8008-e5b5eb421a92.jpg?v=1775399560",
+    ],
   },
   {
     name: "Duo Denim Classique",
@@ -450,6 +467,11 @@ const PRODUCTS: SeedProduct[] = [
       "Duo chemise et jean coupe slim en denim et lin, pour sortir en club ou enchaîner les brunchs d'hiver.",
     descriptionEn:
       "Slim-fit shirt and jean duo in denim and linen, ready for a night out or winter brunches.",
+    images: [
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2025-11-18at5.40.44PM.png?v=1763538078",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2025-11-18at5.40.jpg?v=1763540859",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2025-11-19at12.14.39PM.png?v=1763540859",
+    ],
   },
   {
     name: "Chemise Rayée & Pantalon Lin",
@@ -467,6 +489,11 @@ const PRODUCTS: SeedProduct[] = [
       "Chemise rayée en tissu premium à associer à un pantalon en lin, jean ou chino selon l'occasion.",
     descriptionEn:
       "Premium striped shirt to pair with linen pants, jeans or chinos depending on the occasion.",
+    images: [
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/set2.jpg?v=1768157734",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/set3grey_black.jpg?v=1768157734",
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/set4beige_beigelinen.jpg?v=1768157734",
+    ],
   },
   {
     name: "Ensemble Premium & Chemises",
@@ -484,6 +511,9 @@ const PRODUCTS: SeedProduct[] = [
       "Chemise en tissu premium à porter avec un jean, un pantalon en lin ou un chino pour un look polyvalent.",
     descriptionEn:
       "Premium fabric shirt to wear with jeans, linen pants or chinos for a versatile look.",
+    images: [
+      "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2025-11-16at2.59.24PM.png?v=1763638014",
+    ],
   },
 
   // ── Vêtements / Bas ──
@@ -780,11 +810,13 @@ async function main() {
           })),
         },
         images: {
-          create: [0, 1, 2].map((i) => ({
-            url: img(`${product.slug}-${i}`),
-            alt: `${product.name} — vue ${i + 1}`,
-            position: i,
-          })),
+          create: (product.images ?? [0, 1, 2].map((i) => img(`${product.slug}-${i}`))).map(
+            (url, i) => ({
+              url,
+              alt: `${product.name} — vue ${i + 1}`,
+              position: i,
+            }),
+          ),
         },
         variants: {
           create: variantCombinations.map(({ color, size }, i) => ({
@@ -797,6 +829,20 @@ async function main() {
           })),
         },
       },
+    });
+
+    // Images aren't part of the upsert `update` clause (nested create only
+    // applies on insert), so re-sync them explicitly on every run — this
+    // lets us swap in real product photos for already-seeded products.
+    const desiredImages = product.images ?? [0, 1, 2].map((i) => img(`${product.slug}-${i}`));
+    await prisma.productImage.deleteMany({ where: { productId: created.id } });
+    await prisma.productImage.createMany({
+      data: desiredImages.map((url, i) => ({
+        productId: created.id,
+        url,
+        alt: `${product.name} — vue ${i + 1}`,
+        position: i,
+      })),
     });
 
     const existingReviews = await prisma.review.count({ where: { productId: created.id } });

@@ -9,7 +9,7 @@ const contentSecurityPolicy = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://js.stripe.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://res.cloudinary.com https://picsum.photos https://fastly.picsum.photos",
+  "img-src 'self' data: blob: https://res.cloudinary.com https://picsum.photos https://fastly.picsum.photos https://cdn.shopify.com",
   "font-src 'self' data:",
   "connect-src 'self' https://api.stripe.com",
   "frame-src https://js.stripe.com https://hooks.stripe.com",
@@ -56,6 +56,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "fastly.picsum.photos",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.shopify.com",
         pathname: "/**",
       },
     ],
