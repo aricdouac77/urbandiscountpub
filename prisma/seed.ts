@@ -70,6 +70,14 @@ const CATEGORIES: SeedCategory[] = [
     parent: "vetements",
   },
   {
+    name: "Ensembles",
+    nameEn: "Sets & Outfits",
+    slug: "vetements-ensembles",
+    description: "Ensembles coordonnés prêts à porter, du casual au formel.",
+    descriptionEn: "Ready-to-wear coordinated sets, from casual to formal.",
+    parent: "vetements",
+  },
+  {
     name: "Accessoires",
     nameEn: "Accessories",
     slug: "accessoires",
@@ -364,6 +372,118 @@ const PRODUCTS: SeedProduct[] = [
     materialsEn: "Padded lining, ribbed trims",
     description: "Blouson bomber réversible, doublure rembourrée, finitions bord-côte premium.",
     descriptionEn: "Reversible bomber jacket, padded lining, premium ribbed trims.",
+  },
+
+  // ── Vêtements / Ensembles ──
+  {
+    name: "Ensemble Formel Été Premium",
+    nameEn: "The Summer Formals Men Set — Premium",
+    slug: "ensemble-formel-ete-premium",
+    category: "vetements-ensembles",
+    collections: ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice: 134.9,
+    isNewArrival: true,
+    sizes: APPAREL_SIZES,
+    colors: [
+      { name: "Blanc", hex: "#F5F5F5" },
+      { name: "Beige", hex: "#D8C9AE" },
+    ],
+    materials: "Chemise oxford texturée, pantalon lin-coton",
+    materialsEn: "Textured oxford shirt, linen-cotton pants",
+    description:
+      "Ensemble chemise oxford texturée et pantalon en lin-coton, taillé pour le bureau comme les événements formels.",
+    descriptionEn:
+      "Textured oxford shirt paired with linen-cotton pants, cut for the office and formal events alike.",
+  },
+  {
+    name: "Ensemble Coordonné Weekend",
+    nameEn: "The Weekend Co-ord Set",
+    slug: "ensemble-coordonne-weekend",
+    category: "vetements-ensembles",
+    collections: ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice: 99.9,
+    isNewArrival: true,
+    sizes: APPAREL_SIZES,
+    colors: [{ name: "Noir", hex: "#111111" }],
+    materials: "Coton texturé premium",
+    materialsEn: "Premium textured cotton",
+    description:
+      "Ensemble coordonné en coton texturé premium, pensé pour les brunchs et sorties du soir.",
+    descriptionEn: "Premium textured cotton co-ord set, made for brunches and dinner dates.",
+  },
+  {
+    name: "Ensemble Col Mao en Lin",
+    nameEn: "Linen Ban Collar Co-ord Set",
+    slug: "ensemble-col-mao-lin",
+    category: "vetements-ensembles",
+    collections: ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice: 99.9,
+    isNewArrival: true,
+    sizes: APPAREL_SIZES,
+    colors: [{ name: "Sable", hex: "#C2B280" }],
+    materials: "Lin premium texturé",
+    materialsEn: "Premium textured linen",
+    description:
+      "Ensemble col Mao en lin premium, tenue idéale pour la plage et les destinations resort.",
+    descriptionEn: "Premium linen ban-collar set, an ideal beach and resort outfit.",
+  },
+  {
+    name: "Duo Denim Classique",
+    nameEn: "Men's Denim Classic Duo",
+    slug: "duo-denim-classique",
+    category: "vetements-ensembles",
+    collections: ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice: 98.9,
+    isNewArrival: true,
+    sizes: APPAREL_SIZES,
+    colors: [
+      { name: "Noir", hex: "#111111" },
+      { name: "Bleu Glacier", hex: "#A9C4D8" },
+    ],
+    materials: "Denim et lin coupe slim",
+    materialsEn: "Slim-fit denim and linen",
+    description:
+      "Duo chemise et jean coupe slim en denim et lin, pour sortir en club ou enchaîner les brunchs d'hiver.",
+    descriptionEn:
+      "Slim-fit shirt and jean duo in denim and linen, ready for a night out or winter brunches.",
+  },
+  {
+    name: "Chemise Rayée & Pantalon Lin",
+    nameEn: "Stripe Shirt & Linen Pants",
+    slug: "chemise-rayee-pantalon-lin",
+    category: "vetements-ensembles",
+    collections: ["nouveautes", "edition-limitee"],
+    brand: "UrbanDiscount Label",
+    basePrice: 112.9,
+    isNewArrival: true,
+    sizes: APPAREL_SIZES,
+    materials: "Tissu premium rayé, lin",
+    materialsEn: "Premium striped fabric, linen",
+    description:
+      "Chemise rayée en tissu premium à associer à un pantalon en lin, jean ou chino selon l'occasion.",
+    descriptionEn:
+      "Premium striped shirt to pair with linen pants, jeans or chinos depending on the occasion.",
+  },
+  {
+    name: "Ensemble Premium & Chemises",
+    nameEn: "Premium Co-ords & Shirts",
+    slug: "ensemble-premium-chemises",
+    category: "vetements-ensembles",
+    collections: ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice: 104.9,
+    isNewArrival: true,
+    sizes: APPAREL_SIZES,
+    materials: "Tissu premium",
+    materialsEn: "Premium fabric",
+    description:
+      "Chemise en tissu premium à porter avec un jean, un pantalon en lin ou un chino pour un look polyvalent.",
+    descriptionEn:
+      "Premium fabric shirt to wear with jeans, linen pants or chinos for a versatile look.",
   },
 
   // ── Vêtements / Bas ──
