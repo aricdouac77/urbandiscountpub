@@ -19,6 +19,7 @@ import {
 } from "@/features/catalog/queries/get-product-detail";
 import { prisma } from "@/lib/prisma";
 import { safeJsonLd } from "@/lib/json-ld";
+import { formatPrice } from "@/lib/currency";
 
 export const revalidate = 300;
 
@@ -67,13 +68,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const similarProducts = await getSimilarProducts(product.categorySlug, product.id, locale);
   const hasDiscount = product.compareAtPrice !== null && product.compareAtPrice > product.price;
   const t = await getTranslations("product");
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -144,10 +138,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
 
           <div className="mt-4 flex items-baseline gap-3">
-            <span className="text-2xl font-semibold">{formatPrice(product.price)}</span>
+            <span className="text-2xl font-semibold">{formatPrice(product.price, locale)}</span>
             {hasDiscount && (
               <span className="text-muted-foreground text-lg line-through">
-                {formatPrice(product.compareAtPrice!)}
+                {formatPrice(product.compareAtPrice!, locale)}
               </span>
             )}
           </div>

@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import type { CartItem } from "@/features/cart/store/cart-store";
+import { formatPrice } from "@/lib/currency";
+import type { Locale } from "@/i18n/routing";
 
 type CheckoutOrderSummaryProps = {
   items: CartItem[];
@@ -21,14 +23,7 @@ export function CheckoutOrderSummary({
 }: CheckoutOrderSummaryProps) {
   const t = useTranslations("checkout");
   const tCart = useTranslations("cart");
-  const locale = useLocale();
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
+  const locale = useLocale() as Locale;
 
   return (
     <div className="bg-muted/30 space-y-4 rounded-lg border p-6">
@@ -51,7 +46,9 @@ export function CheckoutOrderSummary({
                 </p>
               )}
             </div>
-            <span className="text-sm font-medium">{formatPrice(item.price * item.quantity)}</span>
+            <span className="text-sm font-medium">
+              {formatPrice(item.price * item.quantity, locale)}
+            </span>
           </div>
         ))}
       </div>
@@ -59,23 +56,23 @@ export function CheckoutOrderSummary({
       <div className="space-y-2 border-t pt-4 text-sm">
         <div className="flex justify-between">
           <span className="text-muted-foreground">{tCart("subtotal")}</span>
-          <span>{formatPrice(subtotal)}</span>
+          <span>{formatPrice(subtotal, locale)}</span>
         </div>
         {discount > 0 && (
           <div className="text-brand flex justify-between">
             <span>{tCart("discount")}</span>
-            <span>-{formatPrice(discount)}</span>
+            <span>-{formatPrice(discount, locale)}</span>
           </div>
         )}
         <div className="flex justify-between">
           <span className="text-muted-foreground">{tCart("shipping")}</span>
-          <span>{freeShipping ? tCart("freeShipping") : formatPrice(shipping)}</span>
+          <span>{freeShipping ? tCart("freeShipping") : formatPrice(shipping, locale)}</span>
         </div>
       </div>
 
       <div className="flex justify-between border-t pt-4 text-base font-semibold">
         <span>{tCart("total")}</span>
-        <span>{formatPrice(total)}</span>
+        <span>{formatPrice(total, locale)}</span>
       </div>
     </div>
   );

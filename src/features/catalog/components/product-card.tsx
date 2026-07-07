@@ -3,19 +3,14 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { WishlistButton } from "@/features/wishlist/components/wishlist-button";
+import { formatPrice } from "@/lib/currency";
+import type { Locale } from "@/i18n/routing";
 import type { ProductCardData } from "@/features/catalog/types/product-card";
 
 export function ProductCard({ product }: { product: ProductCardData }) {
   const hasDiscount = product.compareAtPrice !== null && product.compareAtPrice > product.price;
   const t = useTranslations("product");
-  const locale = useLocale();
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
+  const locale = useLocale() as Locale;
 
   return (
     <Link href={`/produits/${product.slug}`} className="group block">
@@ -45,10 +40,10 @@ export function ProductCard({ product }: { product: ProductCardData }) {
         )}
         <h3 className="text-sm font-medium">{product.name}</h3>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold">{formatPrice(product.price)}</span>
+          <span className="text-sm font-semibold">{formatPrice(product.price, locale)}</span>
           {hasDiscount && (
             <span className="text-muted-foreground text-sm line-through">
-              {formatPrice(product.compareAtPrice!)}
+              {formatPrice(product.compareAtPrice!, locale)}
             </span>
           )}
         </div>

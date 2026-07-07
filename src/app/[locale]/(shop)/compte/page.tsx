@@ -6,6 +6,7 @@ import { getOrdersForUser } from "@/features/orders/queries/get-order";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/features/orders/components/order-status-badge";
+import { formatPrice } from "@/lib/currency";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,13 +20,6 @@ export default async function AccountOverviewPage() {
   const recentOrders = orders.slice(0, 3);
   const t = await getTranslations("account");
   const locale = (await getLocale()) as Locale;
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
 
   return (
     <div className="space-y-8">
@@ -65,7 +59,7 @@ export default async function AccountOverviewPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="font-medium">{formatPrice(Number(order.total))}</span>
+                  <span className="font-medium">{formatPrice(Number(order.total), locale)}</span>
                   <OrderStatusBadge status={order.status} />
                 </div>
               </Link>

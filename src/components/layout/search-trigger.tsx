@@ -16,6 +16,8 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { getTrendingSearches, searchProductsPreview } from "@/actions/search.actions";
+import { formatPrice } from "@/lib/currency";
+import type { Locale } from "@/i18n/routing";
 
 export function SearchTrigger() {
   const [open, setOpen] = useState(false);
@@ -23,14 +25,7 @@ export function SearchTrigger() {
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const router = useRouter();
   const t = useTranslations("search");
-  const locale = useLocale();
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
+  const locale = useLocale() as Locale;
 
   useEffect(() => {
     const timeout = setTimeout(() => setDebouncedQuery(query), 250);
@@ -123,7 +118,7 @@ export function SearchTrigger() {
                   <div className="flex flex-1 flex-col">
                     <span className="text-sm font-medium">{product.name}</span>
                     <span className="text-muted-foreground text-xs">
-                      {formatPrice(product.price)}
+                      {formatPrice(product.price, locale)}
                     </span>
                   </div>
                 </CommandItem>

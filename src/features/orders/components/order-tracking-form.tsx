@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { OrderStatusBadge } from "@/features/orders/components/order-status-badge";
 import { trackOrder, type TrackOrderResult } from "@/actions/tracking.actions";
+import { formatPrice } from "@/lib/currency";
+import type { Locale } from "@/i18n/routing";
 
 export function OrderTrackingForm() {
   const [orderNumber, setOrderNumber] = useState("");
@@ -15,14 +17,7 @@ export function OrderTrackingForm() {
   const [result, setResult] = useState<TrackOrderResult | null>(null);
   const t = useTranslations("search");
   const tCart = useTranslations("cart");
-  const locale = useLocale();
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
+  const locale = useLocale() as Locale;
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -96,14 +91,14 @@ export function OrderTrackingForm() {
                 <span>
                   {item.productName} × {item.quantity}
                 </span>
-                <span>{formatPrice(Number(item.lineTotal))}</span>
+                <span>{formatPrice(Number(item.lineTotal), locale)}</span>
               </div>
             ))}
           </div>
 
           <div className="flex justify-between border-t pt-4 text-base font-semibold">
             <span>{tCart("total")}</span>
-            <span>{formatPrice(Number(result.order.total))}</span>
+            <span>{formatPrice(Number(result.order.total), locale)}</span>
           </div>
         </div>
       )}

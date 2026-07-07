@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/auth-guards";
 import { getOrderForUser } from "@/features/orders/queries/get-order";
 import { OrderStatusBadge } from "@/features/orders/components/order-status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatPrice } from "@/lib/currency";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -28,13 +29,6 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
   const t = await getTranslations("account");
   const tCart = await getTranslations("cart");
   const locale = (await getLocale()) as Locale;
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
 
   return (
     <div className="space-y-6">
@@ -90,18 +84,18 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
                 {item.productName}
                 {item.variantLabel ? ` — ${item.variantLabel}` : ""} × {item.quantity}
               </span>
-              <span className="font-medium">{formatPrice(Number(item.lineTotal))}</span>
+              <span className="font-medium">{formatPrice(Number(item.lineTotal), locale)}</span>
             </div>
           ))}
           <div className="space-y-1 border-t pt-3">
             <div className="text-muted-foreground flex justify-between">
               <span>{tCart("subtotal")}</span>
-              <span>{formatPrice(Number(order.subtotal))}</span>
+              <span>{formatPrice(Number(order.subtotal), locale)}</span>
             </div>
             {Number(order.discountAmount) > 0 && (
               <div className="text-brand flex justify-between">
                 <span>{tCart("discount")}</span>
-                <span>-{formatPrice(Number(order.discountAmount))}</span>
+                <span>-{formatPrice(Number(order.discountAmount), locale)}</span>
               </div>
             )}
             <div className="text-muted-foreground flex justify-between">
@@ -109,12 +103,12 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
               <span>
                 {Number(order.shippingCost) === 0
                   ? tCart("freeShipping")
-                  : formatPrice(Number(order.shippingCost))}
+                  : formatPrice(Number(order.shippingCost), locale)}
               </span>
             </div>
             <div className="flex justify-between font-semibold">
               <span>{tCart("total")}</span>
-              <span>{formatPrice(Number(order.total))}</span>
+              <span>{formatPrice(Number(order.total), locale)}</span>
             </div>
           </div>
         </CardContent>

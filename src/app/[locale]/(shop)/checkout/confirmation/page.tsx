@@ -6,6 +6,7 @@ import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getOrderByNumber } from "@/features/orders/queries/get-order";
 import { ClearCartOnMount } from "@/features/orders/components/clear-cart-on-mount";
+import { formatPrice } from "@/lib/currency";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -31,13 +32,6 @@ export default async function ConfirmationPage({ searchParams }: ConfirmationPag
   const t = await getTranslations("checkout");
   const tCart = await getTranslations("cart");
   const locale = (await getLocale()) as Locale;
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
 
   const isPaid = order.status === "PAID" || order.status !== "PENDING";
 
@@ -66,13 +60,13 @@ export default async function ConfirmationPage({ searchParams }: ConfirmationPag
                 {item.productName}
                 {item.variantLabel ? ` — ${item.variantLabel}` : ""} × {item.quantity}
               </span>
-              <span>{formatPrice(Number(item.lineTotal))}</span>
+              <span>{formatPrice(Number(item.lineTotal), locale)}</span>
             </div>
           ))}
         </div>
         <div className="mt-4 flex justify-between border-t pt-4 text-base font-semibold">
           <span>{tCart("total")}</span>
-          <span>{formatPrice(Number(order.total))}</span>
+          <span>{formatPrice(Number(order.total), locale)}</span>
         </div>
       </div>
 

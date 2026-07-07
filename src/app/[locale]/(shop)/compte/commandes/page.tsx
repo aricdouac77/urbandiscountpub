@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { requireUser } from "@/lib/auth-guards";
 import { getOrdersForUser } from "@/features/orders/queries/get-order";
 import { OrderStatusBadge } from "@/features/orders/components/order-status-badge";
+import { formatPrice } from "@/lib/currency";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -16,13 +17,6 @@ export default async function OrdersPage() {
   const orders = await getOrdersForUser(session.user.id);
   const t = await getTranslations("account");
   const locale = (await getLocale()) as Locale;
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
 
   if (orders.length === 0) {
     return <p className="text-muted-foreground text-sm">{t("noOrders")}</p>;
@@ -46,7 +40,7 @@ export default async function OrdersPage() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <span className="font-medium">{formatPrice(Number(order.total))}</span>
+            <span className="font-medium">{formatPrice(Number(order.total), locale)}</span>
             <OrderStatusBadge status={order.status} />
           </div>
         </Link>

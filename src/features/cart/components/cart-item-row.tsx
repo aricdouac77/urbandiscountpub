@@ -6,19 +6,14 @@ import { Link } from "@/i18n/navigation";
 import { Minus, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore, type CartItem } from "@/features/cart/store/cart-store";
+import { formatPrice } from "@/lib/currency";
+import type { Locale } from "@/i18n/routing";
 
 export function CartItemRow({ item }: { item: CartItem }) {
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
   const t = useTranslations("cart");
-  const locale = useLocale();
-
-  function formatPrice(value: number) {
-    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  }
+  const locale = useLocale() as Locale;
 
   return (
     <div className="flex gap-4 border-b py-6">
@@ -73,7 +68,9 @@ export function CartItemRow({ item }: { item: CartItem }) {
               <Plus className="size-3.5" />
             </Button>
           </div>
-          <span className="text-sm font-semibold">{formatPrice(item.price * item.quantity)}</span>
+          <span className="text-sm font-semibold">
+            {formatPrice(item.price * item.quantity, locale)}
+          </span>
         </div>
       </div>
     </div>
