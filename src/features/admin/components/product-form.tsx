@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ImageUploadButton } from "@/features/admin/components/image-upload-button";
 import { createProduct, updateProduct } from "@/actions/admin/product.actions";
 import {
   productSchema,
@@ -457,15 +458,20 @@ export function ProductForm({
         <Card>
           <CardHeader className="flex-row items-center justify-between">
             <CardTitle className="text-base font-medium">Images</CardTitle>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => imageFields.append({ url: "", alt: "" })}
-            >
-              <Plus className="size-4" />
-              Ajouter
-            </Button>
+            <div className="flex items-center gap-2">
+              <ImageUploadButton
+                onUploaded={(url) => imageFields.append({ url, alt: "" })}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => imageFields.append({ url: "", alt: "" })}
+              >
+                <Plus className="size-4" />
+                Ajouter un lien
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             {imageFields.fields.map((imageField, index) => (

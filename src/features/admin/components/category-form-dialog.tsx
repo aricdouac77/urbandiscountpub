@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { createCategory, updateCategory } from "@/actions/admin/taxonomy.actions";
+import { ImageUploadButton } from "@/features/admin/components/image-upload-button";
 import { categorySchema, type CategoryInput } from "@/features/admin/schemas/category.schema";
 
 function slugify(value: string) {
@@ -160,9 +161,12 @@ export function CategoryFormDialog({ category }: CategoryFormDialogProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>URL de l&apos;image</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="https://..." />
-                  </FormControl>
+                  <div className="flex gap-2">
+                    <FormControl>
+                      <Input {...field} placeholder="https://..." />
+                    </FormControl>
+                    <ImageUploadButton onUploaded={(url) => field.onChange(url)} />
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
