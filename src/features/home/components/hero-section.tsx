@@ -9,7 +9,7 @@ export function HeroSection() {
   return (
     <section className="relative flex min-h-[85vh] items-end overflow-hidden">
       <Image
-        src="https://picsum.photos/seed/urbandiscount-hero/1920/1200"
+        src="/images/pexels-lorenzomessinaph-6772843.jpg"
         alt={t("heroKicker")}
         fill
         priority

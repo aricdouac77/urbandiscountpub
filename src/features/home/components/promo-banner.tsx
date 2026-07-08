@@ -24,7 +24,7 @@ export function PromoBanner() {
           </div>
           <div className="relative hidden aspect-[4/3] lg:block">
             <Image
-              src="https://picsum.photos/seed/urbandiscount-promo/1000/750"
+              src="/images/ranjat.jpg"
               alt={t("promoTitle")}
               fill
               sizes="50vw"
