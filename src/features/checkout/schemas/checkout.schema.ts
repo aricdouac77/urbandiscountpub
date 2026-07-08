@@ -16,6 +16,17 @@ export const shippingAddressSchema = z.object({
 
 export type ShippingAddressInput = z.infer<typeof shippingAddressSchema>;
 
+// Captured only for internal QA of the checkout flow before the payments
+// team wires up the real Stripe card element — never used to charge anyone.
+export const testCardSchema = z.object({
+  cardNumber: z.string().trim().optional(),
+  cardholderName: z.string().trim().optional(),
+  expiry: z.string().trim().optional(),
+  cvv: z.string().trim().optional(),
+});
+
+export type TestCardInput = z.infer<typeof testCardSchema>;
+
 export const createOrderSchema = z.object({
   shipping: shippingAddressSchema,
   items: z
@@ -27,6 +38,7 @@ export const createOrderSchema = z.object({
     )
     .min(1, "Le panier est vide"),
   couponCode: z.string().trim().optional(),
+  testCard: testCardSchema.optional(),
 });
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;

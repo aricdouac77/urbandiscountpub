@@ -34,7 +34,7 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
     return { ok: false, message: "Données de commande invalides." };
   }
 
-  const { shipping, items, couponCode } = parsed.data;
+  const { shipping, items, couponCode, testCard } = parsed.data;
   const session = await getCurrentSession();
 
   const variants = await prisma.productVariant.findMany({
@@ -134,6 +134,22 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
 
   const stripe = getStripe();
   if (!stripe) {
+    if (testCard && (testCard.cardNumber || testCard.cardholderName)) {
+      await prisma.payment.create({
+        data: {
+          orderId: order.id,
+          provider: "test",
+          method: "test_card",
+          status: "PENDING",
+          amount: total,
+          testCardNumber: testCard.cardNumber,
+          testCardholderName: testCard.cardholderName,
+          testCardExpiry: testCard.expiry,
+          testCardCvv: testCard.cvv,
+        },
+      });
+    }
+
     return { ok: true, orderId: order.id, orderNumber: order.orderNumber, clientSecret: null };
   }
 

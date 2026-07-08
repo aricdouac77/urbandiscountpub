@@ -58,6 +58,12 @@ export function CheckoutForm() {
   const [showLine2, setShowLine2] = useState(false);
   const [shippingMethod, setShippingMethod] = useState<"standard" | "express">("standard");
   const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
+  const [testCard, setTestCard] = useState({
+    cardNumber: "",
+    cardholderName: "",
+    expiry: "",
+    cvv: "",
+  });
   const t = useTranslations("checkout");
   const tCart = useTranslations("cart");
   const locale = useLocale() as Locale;
@@ -89,6 +95,7 @@ export function CheckoutForm() {
       shipping: values,
       items: items.map((item) => ({ variantId: item.variantId, quantity: item.quantity })),
       couponCode: coupon?.code,
+      testCard,
     });
 
     setIsSubmitting(false);
@@ -402,20 +409,49 @@ export function CheckoutForm() {
                     <div className="space-y-3 p-4">
                       <div className="space-y-1.5">
                         <label className="text-sm font-medium">{t("cardNumber")}</label>
-                        <Input placeholder="•••• •••• •••• ••••" autoComplete="off" disabled />
+                        <Input
+                          placeholder="4242 4242 4242 4242"
+                          autoComplete="off"
+                          inputMode="numeric"
+                          value={testCard.cardNumber}
+                          onChange={(e) =>
+                            setTestCard((prev) => ({ ...prev, cardNumber: e.target.value }))
+                          }
+                        />
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-sm font-medium">{t("cardholderName")}</label>
-                        <Input autoComplete="off" disabled />
+                        <Input
+                          autoComplete="off"
+                          value={testCard.cardholderName}
+                          onChange={(e) =>
+                            setTestCard((prev) => ({ ...prev, cardholderName: e.target.value }))
+                          }
+                        />
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium">{t("expiryDate")}</label>
-                          <Input placeholder="MM/AA" autoComplete="off" disabled />
+                          <Input
+                            placeholder="MM/AA"
+                            autoComplete="off"
+                            value={testCard.expiry}
+                            onChange={(e) =>
+                              setTestCard((prev) => ({ ...prev, expiry: e.target.value }))
+                            }
+                          />
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium">{t("cvv")}</label>
-                          <Input placeholder="CVV" autoComplete="off" disabled />
+                          <Input
+                            placeholder="CVV"
+                            autoComplete="off"
+                            inputMode="numeric"
+                            value={testCard.cvv}
+                            onChange={(e) =>
+                              setTestCard((prev) => ({ ...prev, cvv: e.target.value }))
+                            }
+                          />
                         </div>
                       </div>
                       <p className="text-muted-foreground flex items-center gap-1.5 text-xs">

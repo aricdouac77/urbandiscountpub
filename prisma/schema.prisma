@@ -490,8 +490,16 @@ model Payment {
   amount                Decimal       @db.Decimal(10, 2)
   currency              String        @default("EUR")
   method                String?
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+  // Captured only while the real Stripe card element isn't wired up yet
+  // (internal QA of the checkout flow before the payments team's Stripe
+  // integration lands) — never populated once a real Stripe PaymentIntent
+  // exists.
+  testCardNumber     String?
+  testCardholderName String?
+  testCardExpiry     String?
+  testCardCvv        String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   orderId String @unique
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
