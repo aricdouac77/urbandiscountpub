@@ -92,13 +92,16 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
   const shippingCost = discountedSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST;
   const total = discountedSubtotal + shippingCost;
 
+  const fullName = [shipping.firstName, shipping.lastName].filter(Boolean).join(" ").trim();
+
   const address = await prisma.address.create({
     data: {
       type: "SHIPPING",
-      fullName: shipping.fullName,
+      fullName,
       line1: shipping.line1,
       line2: shipping.line2,
       city: shipping.city,
+      state: shipping.province,
       postalCode: shipping.postalCode,
       country: shipping.country,
       phone: shipping.phone,

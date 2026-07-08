@@ -2,13 +2,16 @@ import { z } from "zod";
 
 export const shippingAddressSchema = z.object({
   email: z.email("Adresse e-mail invalide"),
-  fullName: z.string().trim().min(2, "Nom complet requis"),
+  firstName: z.string().trim().optional(),
+  lastName: z.string().trim().min(2, "Nom requis"),
   line1: z.string().trim().min(3, "Adresse requise"),
   line2: z.string().trim().optional(),
   city: z.string().trim().min(1, "Ville requise"),
+  province: z.string().trim().optional(),
   postalCode: z.string().trim().min(3, "Code postal requis"),
   country: z.string().trim().min(2, "Pays requis"),
   phone: z.string().trim().optional(),
+  marketingOptIn: z.boolean().optional(),
 });
 
 export type ShippingAddressInput = z.infer<typeof shippingAddressSchema>;
