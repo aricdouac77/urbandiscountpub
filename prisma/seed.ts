@@ -94,19 +94,33 @@ const CATEGORIES: SeedCategory[] = [
 ];
 
 const COLLECTIONS = [
-  { name: "Nouveautés", nameEn: "New Arrivals", slug: "nouveautes", isFeatured: true },
+  {
+    name: "Nouveautés",
+    nameEn: "New Arrivals",
+    slug: "nouveautes",
+    isFeatured: true,
+    image: "/images/pexels-hangers-1850082.jpg",
+  },
   {
     name: "Meilleures ventes",
     nameEn: "Best Sellers",
     slug: "meilleures-ventes",
     isFeatured: true,
+    image: "/images/stocksnap-blouse-2597205_1920.jpg",
   },
-  { name: "Soldes", nameEn: "Sale", slug: "soldes", isFeatured: false },
+  {
+    name: "Soldes",
+    nameEn: "Sale",
+    slug: "soldes",
+    isFeatured: false,
+    image: "/images/pexels-lorenzomessinaph-6772843-alt.jpg",
+  },
   {
     name: "Édition limitée",
     nameEn: "Limited Edition",
     slug: "edition-limitee",
     isFeatured: true,
+    image: "/images/pexels-kriss-32549950.jpg",
   },
 ] as const;
 
@@ -1065,13 +1079,13 @@ async function main() {
   for (const collection of COLLECTIONS) {
     const record = await prisma.collection.upsert({
       where: { slug: collection.slug },
-      update: { nameEn: collection.nameEn },
+      update: { nameEn: collection.nameEn, image: collection.image },
       create: {
         name: collection.name,
         nameEn: collection.nameEn,
         slug: collection.slug,
         isFeatured: collection.isFeatured,
-        image: img(`collection-${collection.slug}`, 1200, 800),
+        image: collection.image,
       },
     });
     collectionBySlug.set(collection.slug, record.id);
