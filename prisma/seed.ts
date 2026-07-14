@@ -1138,7 +1138,7 @@ function pushGroupedProduct(group: ColorVariantGroup) {
     materialsEn: template.materialEn,
     description: group.descriptionFr,
     descriptionEn: group.descriptionEn,
-    images: [`https://cdn.shopify.com/s/files/1/0840/1390/8249/files/${group.colors[0]!.image}`],
+    images: [`https://cdn.shopify.com/s/files/1/0840/1390/8249/${group.colors[0]!.image}`],
   });
 }
 
@@ -1151,9 +1151,9 @@ const TEE_GROUPS: ColorVariantGroup[] = [
     descriptionFr: "T-shirt coupe slim imprimé Simpson At Work, coton doux.",
     descriptionEn: "Slim-fit Simpson At Work printed t-shirt, soft cotton.",
     colors: [
-      { name: "Blue", nameEn: "Blue", image: "731.jpg" },
-      { name: "Black", nameEn: "Black", image: "730.jpg" },
-      { name: "White", nameEn: "White", image: "723.jpg" },
+      { name: "Blue", nameEn: "Blue", image: "files/731.jpg" },
+      { name: "Black", nameEn: "Black", image: "files/730.jpg" },
+      { name: "White", nameEn: "White", image: "files/723.jpg" },
     ],
   },
   {
@@ -1164,10 +1164,10 @@ const TEE_GROUPS: ColorVariantGroup[] = [
     descriptionFr: "T-shirt coupe slim imprimé Mickey, coton doux.",
     descriptionEn: "Slim-fit Mickey printed t-shirt, soft cotton.",
     colors: [
-      { name: "Grey", nameEn: "Grey", image: "726.jpg" },
-      { name: "Black", nameEn: "Black", image: "725.jpg" },
-      { name: "White", nameEn: "White", image: "724.jpg" },
-      { name: "Blue", nameEn: "Blue", image: "722.jpg" },
+      { name: "Grey", nameEn: "Grey", image: "files/726.jpg" },
+      { name: "Black", nameEn: "Black", image: "files/725.jpg" },
+      { name: "White", nameEn: "White", image: "files/724.jpg" },
+      { name: "Blue", nameEn: "Blue", image: "files/722.jpg" },
     ],
   },
   {
@@ -1178,9 +1178,9 @@ const TEE_GROUPS: ColorVariantGroup[] = [
     descriptionFr: "T-shirt rayé avec poche plaquée, coton peigné.",
     descriptionEn: "Striped t-shirt with patch pocket, combed cotton.",
     colors: [
-      { name: "White", nameEn: "Navy White", image: "636.jpg" },
-      { name: "Ivory", nameEn: "Navy Ivory", image: "beige_ba5c1e64-b8ff-4073-8fa7-39484d087fd4.jpg" },
-      { name: "Blue", nameEn: "Navy Blue", image: "633.jpg" },
+      { name: "White", nameEn: "Navy White", image: "files/636.jpg" },
+      { name: "Ivory", nameEn: "Navy Ivory", image: "files/beige_ba5c1e64-b8ff-4073-8fa7-39484d087fd4.jpg" },
+      { name: "Blue", nameEn: "Navy Blue", image: "files/633.jpg" },
     ],
   },
   {
@@ -1191,8 +1191,8 @@ const TEE_GROUPS: ColorVariantGroup[] = [
     descriptionFr: "T-shirt oversize imprimé character, coton lourd.",
     descriptionEn: "Oversize character-print t-shirt, heavyweight cotton.",
     colors: [
-      { name: "Dark Grey", nameEn: "Dark Grey", image: "510.jpg" },
-      { name: "Beige", nameEn: "Beige", image: "508.jpg" },
+      { name: "Dark Grey", nameEn: "Dark Grey", image: "files/510.jpg" },
+      { name: "Beige", nameEn: "Beige", image: "files/508.jpg" },
     ],
   },
   {
@@ -1203,8 +1203,8 @@ const TEE_GROUPS: ColorVariantGroup[] = [
     descriptionFr: "T-shirt oversize imprimé Tupac, coton lourd.",
     descriptionEn: "Oversize Tupac-print t-shirt, heavyweight cotton.",
     colors: [
-      { name: "Black", nameEn: "Black", image: "505.jpg" },
-      { name: "Sea Green", nameEn: "Sea Green", image: "503a.jpg" },
+      { name: "Black", nameEn: "Black", image: "files/505.jpg" },
+      { name: "Sea Green", nameEn: "Sea Green", image: "files/503a.jpg" },
     ],
   },
   {
@@ -1215,9 +1215,9 @@ const TEE_GROUPS: ColorVariantGroup[] = [
     descriptionFr: "T-shirt coupe slim imprimé varsity, coton doux.",
     descriptionEn: "Slim-fit varsity print t-shirt, soft cotton.",
     colors: [
-      { name: "White", nameEn: "White", image: "0842.jpg" },
-      { name: "Mustard", nameEn: "Mustard", image: "0837.jpg" },
-      { name: "Green", nameEn: "Green", image: "0835.jpg" },
+      { name: "White", nameEn: "White", image: "files/0842.jpg" },
+      { name: "Mustard", nameEn: "Mustard", image: "files/0837.jpg" },
+      { name: "Green", nameEn: "Green", image: "files/0835.jpg" },
     ],
   },
   {
@@ -1228,15 +1228,119 @@ const TEE_GROUPS: ColorVariantGroup[] = [
     descriptionFr: "T-shirt coupe slim varsity, coton doux.",
     descriptionEn: "Slim-fit varsity t-shirt, soft cotton.",
     colors: [
-      { name: "Navy Blue", nameEn: "Navy Blue", image: "0840.jpg" },
-      { name: "Black", nameEn: "Black", image: "0836.jpg" },
-      { name: "Blue", nameEn: "Blue", image: "0833.jpg" },
+      { name: "Navy Blue", nameEn: "Navy Blue", image: "files/0840.jpg" },
+      { name: "Black", nameEn: "Black", image: "files/0836.jpg" },
+      { name: "Blue", nameEn: "Blue", image: "files/0833.jpg" },
     ],
   },
 ];
 
 for (const group of TEE_GROUPS) {
   pushGroupedProduct(group);
+}
+
+const SHIRT_GROUPS: ColorVariantGroup[] = [
+  {
+    name: "Chemise Imprimée",
+    nameEn: "Printed Shirt",
+    kind: "shirt",
+    priceAED: 39.0,
+    descriptionFr: "Chemise manches courtes imprimée, coton léger.",
+    descriptionEn: "Short-sleeve printed shirt, lightweight cotton.",
+    colors: [
+      { name: "Grey", nameEn: "Multicolor", image: "products/IMG-20211004-WA0090.jpg" },
+      { name: "Mustard", nameEn: "Orange", image: "products/6f6771c1-67a9-4eff-9d92-adc9d2636645.jpg" },
+      { name: "White", nameEn: "White", image: "products/174.jpg" },
+    ],
+  },
+  {
+    name: "Chemise Formelle à Carreaux",
+    nameEn: "Block Checked Formal Shirt",
+    kind: "shirt",
+    priceAED: 49.0,
+    descriptionFr: "Chemise formelle à carreaux, coupe droite, coton.",
+    descriptionEn: "Block checked formal shirt, regular fit, cotton.",
+    colors: [
+      { name: "Grey", nameEn: "Red", image: "products/2263.jpg" },
+      { name: "Blue", nameEn: "Blue", image: "products/2262.jpg" },
+      { name: "Black", nameEn: "Black", image: "products/2260.jpg" },
+    ],
+  },
+  {
+    name: "Chemise en Lin",
+    nameEn: "Linen Shirt",
+    kind: "shirt",
+    priceAED: 99.0,
+    descriptionFr: "Chemise en lin manches longues, respirante et légère.",
+    descriptionEn: "Long-sleeve linen shirt, breathable and lightweight.",
+    colors: [
+      { name: "White", nameEn: "White", image: "products/IMG-20210221-WA0044.jpg" },
+      { name: "Beige", nameEn: "Beige", image: "products/IMG-20210221-WA0047.jpg" },
+      { name: "Navy Blue", nameEn: "Dark Blue", image: "products/LISH04.jpg" },
+      { name: "Blue", nameEn: "Light Blue", image: "products/IMG-20210417-WA0109.jpg" },
+    ],
+  },
+  {
+    name: "Chemise Coupe Slim",
+    nameEn: "Slim Fit Shirt",
+    kind: "shirt",
+    priceAED: 48.0,
+    descriptionFr: "Chemise coupe slim manches longues, coton stretch.",
+    descriptionEn: "Slim-fit long-sleeve shirt, stretch cotton.",
+    colors: [
+      { name: "Blue", nameEn: "Maya Blue", image: "products/P0095S.jpg" },
+      { name: "Black", nameEn: "Ebony Black", image: "products/0402.jpg" },
+      { name: "Mustard", nameEn: "Salmon Pink", image: "products/FOSH.0644.jpg" },
+    ],
+  },
+];
+
+for (const group of SHIRT_GROUPS) {
+  pushGroupedProduct(group);
+}
+
+const SHIRTS_RAW_IMPORT: RawImportItem[] = [
+  { title: "Chemise Formelle Charbon", titleEn: "Formal Shirt - Charcoal", kind: "shirt", priceAED: 49.0, image: "products/2256.jpg" },
+  { title: "Chemise Formelle à Carreaux Noire", titleEn: "Checked Formal Shirt - Black", kind: "shirt", priceAED: 49.0, image: "products/2261.jpg" },
+  { title: "Polo Gris", titleEn: "Polo Shirt - Grey", kind: "polo", priceAED: 49.0, image: "products/1599.jpg" },
+  { title: "Polo Beach Splash", titleEn: "Beach Splash Polo Shirt", kind: "polo", priceAED: 49.0, image: "products/image.jpg" },
+  { title: "Polo Luxury Aesthetic", titleEn: "Luxury Aesthetic Polo Shirt", kind: "polo", priceAED: 65.0, image: "products/image_213df834-d650-42ad-a300-7915cf666713.jpg" },
+];
+
+for (const item of SHIRTS_RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title}. ${template.fr}`,
+    descriptionEn: `${item.titleEn}. ${template.en}`,
+    images: [imageUrl],
+  });
 }
 
 const REVIEWERS = [
