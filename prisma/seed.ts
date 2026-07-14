@@ -1822,6 +1822,48 @@ for (const item of PRINTED_SET_RAW_IMPORT) {
   });
 }
 
+const SHORTS_GROUPS: ColorVariantGroup[] = [
+  {
+    name: "Short Casual",
+    nameEn: "Casual Shorts",
+    kind: "chino-short",
+    priceAED: 45.0,
+    descriptionFr: "Short casual en coton léger, coupe droite, ceinture élastiquée.",
+    descriptionEn: "Lightweight cotton casual shorts, straight fit, elastic waistband.",
+    colors: [
+      { name: "Rayures Bleues", nameEn: "Blue Stripe", image: "products/0753.jpg" },
+      { name: "Bleu", nameEn: "Blue", image: "products/0761.jpg" },
+      { name: "Vert", nameEn: "Green", image: "products/0762.jpg" },
+      { name: "Gris", nameEn: "Grey", image: "products/0763.jpg" },
+      { name: "Ciel", nameEn: "Light Blue", image: "products/0764.jpg" },
+      { name: "Rose Nude", nameEn: "Nude Pink", image: "products/0765.jpg" },
+      { name: "Écarlate Rayé", nameEn: "Red Side Stripe", image: "products/0766.jpg" },
+      { name: "Jaune", nameEn: "Yellow", image: "products/0767.jpg" },
+    ],
+  },
+  {
+    name: "Short en Jean",
+    nameEn: "Denim Shorts",
+    kind: "denim-short",
+    priceAED: 55.0,
+    descriptionFr: "Short en denim, coupe décontractée pour les journées chaudes.",
+    descriptionEn: "Denim shorts, relaxed fit for warm days.",
+    colors: [
+      { name: "Cyan", nameEn: "Cyan Blue", image: "products/image_e4dc34ff-e695-4e83-8bee-53589b78b6a2.jpg" },
+      { name: "Noir Délavé", nameEn: "Black Faded", image: "products/black.jpg" },
+      { name: "Gris Blanchi", nameEn: "Grey Bleach Wash", image: "products/0279a.jpg" },
+      { name: "Perle", nameEn: "Grey", image: "products/0704a.jpg" },
+      { name: "Bleu Clair", nameEn: "Light Blue", image: "products/0705.jpg" },
+      { name: "Vert", nameEn: "Green", image: "products/2055.jpg" },
+      { name: "Blanc Déchiré", nameEn: "Ripped White", image: "products/0682.jpg" },
+    ],
+  },
+];
+
+for (const group of SHORTS_GROUPS) {
+  pushGroupedProduct(group);
+}
+
 const REVIEWERS = [
   { name: "Léa M.", email: "lea.m@seed.urbandiscount.local" },
   { name: "Karim B.", email: "karim.b@seed.urbandiscount.local" },
