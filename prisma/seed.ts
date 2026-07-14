@@ -1436,6 +1436,109 @@ for (const item of JEANS_RAW_IMPORT) {
   });
 }
 
+const CHINO_GROUPS: ColorVariantGroup[] = [
+  {
+    name: "Short Chino Imprimé",
+    nameEn: "Printed Chino Shorts",
+    kind: "chino-short",
+    priceAED: 55.0,
+    descriptionFr: "Short chino imprimé en coton, coupe droite, ceinture ajustable.",
+    descriptionEn: "Printed cotton chino shorts, straight fit, adjustable waist.",
+    colors: [
+      { name: "Ecru", nameEn: "Off White Fish", image: "products/WhatsAppImage2021-12-02at16.02.21.jpg" },
+      { name: "Flamant", nameEn: "Blue Flamingo", image: "products/WhatsAppImage2021-12-02at16.02.19.jpg" },
+      { name: "Marine", nameEn: "Navy Texture", image: "products/navy.jpg" },
+      { name: "Sapin", nameEn: "Green Trees", image: "products/greentrees.jpg" },
+      { name: "Neige", nameEn: "White Forest", image: "products/whiteforest.jpg" },
+      { name: "Feuillage", nameEn: "Blue Leaves", image: "products/WhatsAppImage2021-12-02at16.02.22.jpg" },
+      { name: "Fleurs Grises", nameEn: "Grey Floral", image: "products/floralshort.jpg" },
+    ],
+  },
+  {
+    name: "Pantalon Chino Basique",
+    nameEn: "Basic Chino Pants",
+    kind: "chino-pant",
+    priceAED: 29.0,
+    descriptionFr: "Pantalon chino basique en coton, coupe droite, polyvalent.",
+    descriptionEn: "Basic cotton chino pants, straight fit, versatile.",
+    colors: [
+      { name: "Vert", nameEn: "Green", image: "products/IMG-20210817-WA0464_6cec25e5-b2cc-42f6-9630-b4aaa63eb8eb.jpg" },
+      { name: "Gris Foncé", nameEn: "Dark Grey", image: "products/chpa02.jpg" },
+      { name: "Marron", nameEn: "Maroon", image: "products/chpa04.jpg" },
+    ],
+  },
+  {
+    name: "Pantalon Chino Coupe Slim",
+    nameEn: "Slim Fit Chino Pants",
+    kind: "chino-pant",
+    priceAED: 75.0,
+    descriptionFr: "Pantalon chino coupe slim en coton, finitions soignées.",
+    descriptionEn: "Slim-fit cotton chino pants, clean finishing.",
+    colors: [
+      { name: "Beige", nameEn: "Beige", image: "products/0712.jpg" },
+      { name: "Kaki", nameEn: "British Khaki", image: "products/0715.jpg" },
+      { name: "Bleu Pastel", nameEn: "Pastel Blue", image: "products/PastelBlue.jpg" },
+    ],
+  },
+  {
+    name: "Pantalon Chino",
+    nameEn: "Chino Pants",
+    kind: "chino-pant",
+    priceAED: 59.0,
+    descriptionFr: "Pantalon chino en coton, coupe droite, polyvalent du bureau au weekend.",
+    descriptionEn: "Cotton chino pants, straight fit, versatile from office to weekend.",
+    colors: [
+      { name: "Bleu", nameEn: "Blue", image: "products/0708.jpg" },
+      { name: "Brun Argile", nameEn: "Clay Brown", image: "products/0706.jpg" },
+    ],
+  },
+];
+
+for (const group of CHINO_GROUPS) {
+  pushGroupedProduct(group);
+}
+
+const CHINO_RAW_IMPORT: RawImportItem[] = [
+  { title: "Pantalon Chino Moutarde", titleEn: "Mustard Chino Pants", kind: "chino-pant", priceAED: 75.0, image: "products/CHPA05.jpg" },
+  { title: "Pantalon Chino Kaki", titleEn: "Khaki Chino Pants", kind: "chino-pant", priceAED: 50.0, image: "products/IMG-20201221-WA0008.jpg" },
+];
+
+for (const item of CHINO_RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title}. ${template.fr}`,
+    descriptionEn: `${item.titleEn}. ${template.en}`,
+    images: [imageUrl],
+  });
+}
+
 const REVIEWERS = [
   { name: "Léa M.", email: "lea.m@seed.urbandiscount.local" },
   { name: "Karim B.", email: "karim.b@seed.urbandiscount.local" },
