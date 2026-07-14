@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,9 +23,8 @@ import { computeCartTotals, useCartStore } from "@/features/cart/store/cart-stor
 import { CheckoutOrderSummary } from "@/features/checkout/components/checkout-order-summary";
 import { CardBrandBadge } from "@/features/checkout/components/card-brand-badge";
 import { StripePaymentForm } from "@/features/checkout/components/stripe-payment-form";
-import { formatPrice } from "@/lib/currency";
+import { formatPriceInCurrency, getCurrencyForCountry } from "@/lib/currency";
 import { cvvLength, formatCardNumber, formatExpiry, luhnCheck } from "@/lib/card";
-import type { Locale } from "@/i18n/routing";
 import {
   shippingAddressSchema,
   type ShippingAddressInput,
@@ -74,7 +73,6 @@ export function CheckoutForm() {
   });
   const t = useTranslations("checkout");
   const tCart = useTranslations("cart");
-  const locale = useLocale() as Locale;
 
   useEffect(() => setMounted(true), []);
 
@@ -94,6 +92,10 @@ export function CheckoutForm() {
       marketingOptIn: true,
     },
   });
+
+  const selectedCountry = form.watch("country");
+  const displayCurrency = getCurrencyForCountry(selectedCountry);
+  const format = (value: number) => formatPriceInCurrency(value, displayCurrency);
 
   async function onSubmit(values: ShippingAddressInput) {
     if (items.length === 0) return;
@@ -175,9 +177,7 @@ export function CheckoutForm() {
                   className={`size-4 transition-transform ${showSummary ? "rotate-180" : ""}`}
                 />
               </span>
-              <span className="text-foreground font-semibold">
-                {formatPrice(displayTotal, locale)}
-              </span>
+              <span className="text-foreground font-semibold">{format(displayTotal)}</span>
             </button>
             {showSummary && (
               <div className="mb-8 lg:hidden">
@@ -188,6 +188,7 @@ export function CheckoutForm() {
                   shipping={displayShipping}
                   total={displayTotal}
                   freeShipping={displayFreeShipping}
+                  currency={displayCurrency}
                 />
               </div>
             )}
@@ -394,7 +395,7 @@ export function CheckoutForm() {
                         </span>
                       </span>
                       <span className="text-sm font-medium">
-                        {totals.freeShipping ? tCart("freeShipping") : formatPrice(totals.shipping, locale)}
+                        {totals.freeShipping ? tCart("freeShipping") : format(totals.shipping)}
                       </span>
                     </label>
                     <label className="flex cursor-pointer items-center gap-3 p-4">
@@ -412,7 +413,7 @@ export function CheckoutForm() {
                         </span>
                       </span>
                       <span className="text-sm font-medium">
-                        {formatPrice(totals.shipping + EXPRESS_SHIPPING_SURCHARGE, locale)}
+                        {format(totals.shipping + EXPRESS_SHIPPING_SURCHARGE)}
                       </span>
                     </label>
                   </div>
@@ -570,6 +571,7 @@ export function CheckoutForm() {
           shipping={displayShipping}
           total={displayTotal}
           freeShipping={displayFreeShipping}
+          currency={displayCurrency}
         />
       </div>
     </div>
