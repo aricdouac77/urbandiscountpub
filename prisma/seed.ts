@@ -1696,6 +1696,66 @@ for (const item of JOGGER_RAW_IMPORT) {
   });
 }
 
+const SWEAT_GROUP: ColorVariantGroup = {
+  name: "Sweat Fleece à Carreaux",
+  nameEn: "Checks Fleece Sweatshirt",
+  kind: "sweatshirt",
+  priceAED: 65.0,
+  descriptionFr: "Sweat en molleton à carreaux, coupe confortable, col rond.",
+  descriptionEn: "Checked fleece sweatshirt, comfortable fit, crew neck.",
+  colors: [
+    { name: "Gris", nameEn: "Grey Checks", image: "products/0769.jpg" },
+    { name: "Sable", nameEn: "Sand Checks", image: "products/0771.jpg" },
+    { name: "Bicolore Rouge", nameEn: "Black & Red Check", image: "products/0774.jpg" },
+  ],
+};
+
+pushGroupedProduct(SWEAT_GROUP);
+
+const SWEAT_RAW_IMPORT: RawImportItem[] = [
+  { title: "Sweat Logo Embossé Vert", titleEn: "Green Embossed Logo Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/0773.jpg" },
+  { title: "Sweat Vintage Bleu Foncé", titleEn: "Dark Blue Vintage Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/0775.jpg" },
+  { title: "Sweat Patch Cuir Bleu Foncé", titleEn: "Fleece With Leather Patch Sweatshirt - Dark Blue", kind: "sweatshirt", priceAED: 75.0, image: "products/0776.jpg" },
+  { title: "Sweat Patch Cuir", titleEn: "Fleece Sweatshirt With Leather Patch", kind: "sweatshirt", priceAED: 65.0, image: "products/0778.jpg" },
+  { title: "Sweat Anthracite", titleEn: "Charcoal Sweatshirt", kind: "sweatshirt", priceAED: 65.0, image: "products/0779.jpg" },
+];
+
+for (const item of SWEAT_RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title}. ${template.fr}`,
+    descriptionEn: `${item.titleEn}. ${template.en}`,
+    images: [imageUrl],
+  });
+}
+
 const REVIEWERS = [
   { name: "Léa M.", email: "lea.m@seed.urbandiscount.local" },
   { name: "Karim B.", email: "karim.b@seed.urbandiscount.local" },
