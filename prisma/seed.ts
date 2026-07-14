@@ -1343,6 +1343,99 @@ for (const item of SHIRTS_RAW_IMPORT) {
   });
 }
 
+const JEANS_GROUPS: ColorVariantGroup[] = [
+  {
+    name: "Jean Déchiré Délavé",
+    nameEn: "Ripped Distressed Jeans",
+    kind: "jean",
+    priceAED: 75.0,
+    descriptionFr: "Jean coupe slim déchiré et délavé, denim stretch.",
+    descriptionEn: "Slim-fit ripped and distressed jeans, stretch denim.",
+    colors: [
+      { name: "Azur Délavé", nameEn: "Mid Blue Faded", image: "products/RJ3451.jpg" },
+      { name: "Cobalt", nameEn: "Mid Blue Dynamic", image: "products/RJ3448.jpg" },
+      { name: "Grey", nameEn: "Grey Washed", image: "products/RJ3449.jpg" },
+      { name: "Indigo", nameEn: "Dark Blue Distressed", image: "products/RJ3450.jpg" },
+      { name: "Marine", nameEn: "Dark Blue Dynamic", image: "products/RJ3445.jpg" },
+    ],
+  },
+  {
+    name: "Jogger en Denim Délavé",
+    nameEn: "Faded Denim Jogger",
+    kind: "jogger",
+    priceAED: 75.0,
+    descriptionFr: "Jogger en denim délavé, coupe ajustée, poches zippées.",
+    descriptionEn: "Faded denim jogger, tapered fit, zip pockets.",
+    colors: [
+      { name: "Grey", nameEn: "Faded Grey", image: "products/2163.jpg" },
+      { name: "Azur Délavé", nameEn: "Faded Blue", image: "products/2162.jpg" },
+    ],
+  },
+  {
+    name: "Jogger en Denim",
+    nameEn: "Denim Jogger",
+    kind: "jogger",
+    priceAED: 75.0,
+    descriptionFr: "Jogger en denim coupe ajustée, poches zippées.",
+    descriptionEn: "Denim jogger, tapered fit, zip pockets.",
+    colors: [
+      { name: "Marine", nameEn: "Dark Blue", image: "products/0638.jpg" },
+      { name: "Cobalt", nameEn: "Mid Blue", image: "products/0639.jpg" },
+      { name: "Ciel", nameEn: "Light Blue", image: "products/0641.jpg" },
+    ],
+  },
+];
+
+for (const group of JEANS_GROUPS) {
+  pushGroupedProduct(group);
+}
+
+const JEANS_RAW_IMPORT: RawImportItem[] = [
+  { title: "Jean Denim 231", titleEn: "Denim Jeans 231", kind: "jean", priceAED: 41.0, image: "products/0231.jpg" },
+  { title: "Jean Denim 253", titleEn: "Denim Jeans 253", kind: "jean", priceAED: 41.0, image: "products/0253.jpg" },
+  { title: "Jean Bleu Foncé 202", titleEn: "Dark Blue Jeans 202", kind: "jean", priceAED: 41.0, image: "products/02_b000a637-7f08-4ea1-9064-570524fc590e.jpg" },
+  { title: "Jean Denim 215", titleEn: "Denim Jeans 215", kind: "jean", priceAED: 75.0, image: "products/image_5833256f-55c9-49aa-a8de-3d49f02d18b8.jpg" },
+  { title: "Jean Denim 230", titleEn: "Denim Jeans 230", kind: "jean", priceAED: 89.0, image: "products/dp230.jpg" },
+  { title: "Jean Denim 245", titleEn: "Denim Jeans 245", kind: "jean", priceAED: 65.0, image: "products/Dp245.jpg" },
+  { title: "Jean Déchiré Bleu Moyen 0748", titleEn: "Mid Blue Ripped Jeans 0748", kind: "jean", priceAED: 49.0, image: "products/0748.jpg" },
+];
+
+for (const item of JEANS_RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title}. ${template.fr}`,
+    descriptionEn: `${item.titleEn}. ${template.en}`,
+    images: [imageUrl],
+  });
+}
+
 const REVIEWERS = [
   { name: "Léa M.", email: "lea.m@seed.urbandiscount.local" },
   { name: "Karim B.", email: "karim.b@seed.urbandiscount.local" },
