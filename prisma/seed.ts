@@ -47,11 +47,11 @@ const CATEGORIES: SeedCategory[] = [
     parent: "sneakers",
   },
   {
-    name: "Vêtements",
-    nameEn: "Clothing",
+    name: "Vêtements Homme",
+    nameEn: "Men's Clothing",
     slug: "vetements",
-    description: "Streetwear et essentiels du quotidien.",
-    descriptionEn: "Streetwear and everyday essentials.",
+    description: "Streetwear et essentiels du quotidien pour homme.",
+    descriptionEn: "Streetwear and everyday essentials for men.",
   },
   {
     name: "Hauts",
@@ -76,6 +76,37 @@ const CATEGORIES: SeedCategory[] = [
     description: "Ensembles coordonnés prêts à porter, du casual au formel.",
     descriptionEn: "Ready-to-wear coordinated sets, from casual to formal.",
     parent: "vetements",
+  },
+  {
+    name: "Vêtements Femme",
+    nameEn: "Women's Clothing",
+    slug: "vetements-femme",
+    description: "Streetwear et essentiels du quotidien pour femme.",
+    descriptionEn: "Streetwear and everyday essentials for women.",
+  },
+  {
+    name: "Hauts",
+    nameEn: "Tops",
+    slug: "vetements-femme-hauts",
+    description: "Sweats, t-shirts, chemises et vestes.",
+    descriptionEn: "Sweatshirts, t-shirts, shirts and jackets.",
+    parent: "vetements-femme",
+  },
+  {
+    name: "Bas",
+    nameEn: "Bottoms",
+    slug: "vetements-femme-bas",
+    description: "Pantalons, joggers et shorts.",
+    descriptionEn: "Pants, joggers and shorts.",
+    parent: "vetements-femme",
+  },
+  {
+    name: "Ensembles",
+    nameEn: "Sets & Outfits",
+    slug: "vetements-femme-ensembles",
+    description: "Ensembles coordonnés prêts à porter, du casual au formel.",
+    descriptionEn: "Ready-to-wear coordinated sets, from casual to formal.",
+    parent: "vetements-femme",
   },
   {
     name: "Accessoires",
@@ -991,6 +1022,12 @@ const WOMEN_RAW_IMPORT: RawImportItem[] = [
   { title: "Ensemble Loungewear", titleEn: "Women Lounge Wear Co-ord", kind: "set", priceAED: 85.0, image: "files/Aqua_Pink.jpg" },
 ];
 
+const FEMALE_CATEGORY_MAP: Partial<Record<string, string>> = {
+  "vetements-hauts": "vetements-femme-hauts",
+  "vetements-bas": "vetements-femme-bas",
+  "vetements-ensembles": "vetements-femme-ensembles",
+};
+
 for (const item of WOMEN_RAW_IMPORT) {
   const template = KIND_TEMPLATES[item.kind];
   const basePrice = toEuroPrice(item.priceAED);
@@ -1012,7 +1049,7 @@ for (const item of WOMEN_RAW_IMPORT) {
     name: item.title,
     nameEn: item.titleEn,
     slug,
-    category: template.category,
+    category: FEMALE_CATEGORY_MAP[template.category] ?? template.category,
     collections: item.discountPct ? ["soldes"] : ["nouveautes"],
     brand: "UrbanDiscount Label",
     basePrice,
@@ -1942,7 +1979,13 @@ async function main() {
   for (const [index, category] of topLevel.entries()) {
     const record = await prisma.category.upsert({
       where: { slug: category.slug },
-      update: { nameEn: category.nameEn, descriptionEn: category.descriptionEn },
+      update: {
+        name: category.name,
+        nameEn: category.nameEn,
+        description: category.description,
+        descriptionEn: category.descriptionEn,
+        position: index,
+      },
       create: {
         name: category.name,
         nameEn: category.nameEn,
@@ -1959,7 +2002,14 @@ async function main() {
   for (const [index, category] of children.entries()) {
     const record = await prisma.category.upsert({
       where: { slug: category.slug },
-      update: { nameEn: category.nameEn, descriptionEn: category.descriptionEn },
+      update: {
+        name: category.name,
+        nameEn: category.nameEn,
+        description: category.description,
+        descriptionEn: category.descriptionEn,
+        position: index,
+        parentId: categoryBySlug.get(category.parent!),
+      },
       create: {
         name: category.name,
         nameEn: category.nameEn,
@@ -2004,6 +2054,7 @@ async function main() {
         shortDescriptionEn: product.descriptionEn.slice(0, 90),
         materialsEn: product.materialsEn,
         careInstructionsEn: product.careInstructionsEn,
+        categoryId: categoryBySlug.get(product.category),
       },
       create: {
         name: product.name,
