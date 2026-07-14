@@ -109,6 +109,8 @@
   "checkout": {
     "title": "Commande",
     "empty": "Votre panier est vide.",
+    "buyNowNotice": "Achat direct — seul cet article sera commandé.",
+    "switchToCart": "Commander mon panier à la place",
     "email": "E-mail",
     "fullName": "Nom complet",
     "address": "Adresse",
@@ -297,6 +299,7 @@
     "color": "Couleur",
     "outOfStock": "Rupture de stock",
     "addToCart": "Ajouter au panier",
+    "buyNow": "Acheter maintenant",
     "selectSize": "Choisissez une taille",
     "addedToCart": "Ajouté au panier",
     "reviewsTitle": "Avis clients",

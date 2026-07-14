@@ -21,12 +21,15 @@ export type AppliedCoupon = {
 type CartState = {
   items: CartItem[];
   coupon: AppliedCoupon | null;
+  buyNowItem: CartItem | null;
   addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
   removeItem: (variantId: string) => void;
   updateQuantity: (variantId: string, quantity: number) => void;
   applyCoupon: (coupon: AppliedCoupon) => void;
   removeCoupon: () => void;
   clear: () => void;
+  setBuyNow: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
+  clearBuyNow: () => void;
 };
 
 export const useCartStore = create<CartState>()(
@@ -34,6 +37,7 @@ export const useCartStore = create<CartState>()(
     (set) => ({
       items: [],
       coupon: null,
+      buyNowItem: null,
       addItem: (item, quantity = 1) =>
         set((state) => {
           const existing = state.items.find((i) => i.variantId === item.variantId);
@@ -58,8 +62,13 @@ export const useCartStore = create<CartState>()(
       applyCoupon: (coupon) => set({ coupon }),
       removeCoupon: () => set({ coupon: null }),
       clear: () => set({ items: [], coupon: null }),
+      setBuyNow: (item, quantity = 1) => set({ buyNowItem: { ...item, quantity } }),
+      clearBuyNow: () => set({ buyNowItem: null }),
     }),
-    { name: "urbandiscount-cart" },
+    {
+      name: "urbandiscount-cart",
+      partialize: (state) => ({ items: state.items, coupon: state.coupon }),
+    },
   ),
 );
 

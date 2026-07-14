@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useForm } from "react-hook-form";
@@ -49,8 +49,14 @@ const EXPRESS_SHIPPING_SURCHARGE = 9.9;
 export function CheckoutForm() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const items = useCartStore((state) => state.items);
+  const cartItems = useCartStore((state) => state.items);
+  const buyNowItem = useCartStore((state) => state.buyNowItem);
+  const clearBuyNow = useCartStore((state) => state.clearBuyNow);
   const coupon = useCartStore((state) => state.coupon);
+  const items = useMemo(
+    () => (buyNowItem ? [buyNowItem] : cartItems),
+    [buyNowItem, cartItems],
+  );
   const [orderResult, setOrderResult] = useState<{
     orderNumber: string;
     clientSecret: string | null;
@@ -108,10 +114,12 @@ export function CheckoutForm() {
     }
 
     if (!result.clientSecret) {
+      clearBuyNow();
       router.push(`/checkout/confirmation?order=${result.orderNumber}`);
       return;
     }
 
+    clearBuyNow();
     setOrderResult({ orderNumber: result.orderNumber, clientSecret: result.clientSecret });
   }
 
@@ -142,6 +150,20 @@ export function CheckoutForm() {
           />
         ) : (
           <>
+            {buyNowItem && (
+              <div className="bg-muted/40 mb-6 flex items-center justify-between rounded-md border px-4 py-3 text-sm">
+                <span>{t("buyNowNotice")}</span>
+                {cartItems.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={clearBuyNow}
+                    className="text-brand font-medium hover:underline"
+                  >
+                    {t("switchToCart")}
+                  </button>
+                )}
+              </div>
+            )}
             <button
               type="button"
               onClick={() => setShowSummary((v) => !v)}

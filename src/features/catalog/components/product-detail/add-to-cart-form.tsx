@@ -6,6 +6,7 @@ import { Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useRouter } from "@/i18n/navigation";
 import { useCartStore } from "@/features/cart/store/cart-store";
 import type { ProductVariantData } from "@/features/catalog/types/product-detail";
 
@@ -43,7 +44,10 @@ export function AddToCartForm({
   );
   const [selectedSize, setSelectedSize] = useState<string | null>(defaultVariant?.size ?? null);
   const [quantity, setQuantity] = useState(1);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
+  const setBuyNow = useCartStore((state) => state.setBuyNow);
+  const router = useRouter();
   const t = useTranslations("product");
 
   const sizeVariants = useMemo(
@@ -88,6 +92,26 @@ export function AddToCartForm({
     );
 
     toast.success(t("addedToCartToast", { name }));
+  }
+
+  function handleBuyNow() {
+    if (!selectedVariant) return;
+    setIsBuyingNow(true);
+
+    setBuyNow(
+      {
+        productId,
+        variantId: selectedVariant.id,
+        slug,
+        name,
+        imageUrl,
+        price,
+        size: selectedVariant.size,
+      },
+      quantity,
+    );
+
+    router.push("/checkout");
   }
 
   return (
@@ -179,6 +203,7 @@ export function AddToCartForm({
 
         <Button
           type="button"
+          variant="outline"
           size="lg"
           className="flex-1"
           disabled={!selectedVariant || outOfStock}
@@ -187,6 +212,16 @@ export function AddToCartForm({
           {outOfStock ? t("unavailable") : t("addToCart")}
         </Button>
       </div>
+
+      <Button
+        type="button"
+        size="lg"
+        className="w-full"
+        disabled={!selectedVariant || outOfStock || isBuyingNow}
+        onClick={handleBuyNow}
+      >
+        {t("buyNow")}
+      </Button>
     </div>
   );
 }
