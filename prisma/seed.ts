@@ -1539,6 +1539,101 @@ for (const item of CHINO_RAW_IMPORT) {
   });
 }
 
+const CARGO_GROUPS: ColorVariantGroup[] = [
+  {
+    name: "Short Cargo",
+    nameEn: "Cargo Shorts",
+    kind: "cargo",
+    priceAED: 45.0,
+    descriptionFr: "Short cargo multi-poches en coton, coupe décontractée.",
+    descriptionEn: "Multi-pocket cotton cargo shorts, relaxed fit.",
+    colors: [
+      { name: "Olive", nameEn: "Olive Green", image: "products/732.jpg" },
+      { name: "Fumée", nameEn: "Grey", image: "products/739.jpg" },
+      { name: "Perle", nameEn: "Light Grey", image: "products/738.jpg" },
+      { name: "Bleu Nuit", nameEn: "Dark Blue", image: "products/735.jpg" },
+      { name: "Beige", nameEn: "Beige", image: "products/869EFE50-902E-4B56-9CD3-99CA836C21F0.jpg" },
+      { name: "Ivoire", nameEn: "Beige 0731", image: "products/731.jpg" },
+      { name: "Kaki", nameEn: "Khaki", image: "products/733.jpg" },
+      { name: "Cosmos", nameEn: "Space Blue", image: "products/736.jpg" },
+      { name: "Rouge", nameEn: "Red", image: "products/737.jpg" },
+    ],
+  },
+  {
+    name: "Short Cargo Imprimé",
+    nameEn: "Printed Cargo Shorts",
+    kind: "cargo",
+    priceAED: 55.0,
+    descriptionFr: "Short cargo imprimé, multi-poches, coton résistant.",
+    descriptionEn: "Printed cargo shorts, multi-pocket, durable cotton.",
+    colors: [
+      { name: "Bleu Imprimé", nameEn: "Printed Blue", image: "products/740.jpg" },
+      { name: "Feuilles Bleu", nameEn: "Leaf Print Blue", image: "products/741.jpg" },
+    ],
+  },
+  {
+    name: "Pantalon Cargo Oversize Américain",
+    nameEn: "American Oversized Cargo Trouser",
+    kind: "cargo",
+    priceAED: 75.0,
+    descriptionFr: "Pantalon cargo oversize multi-poches, coton épais.",
+    descriptionEn: "Oversized multi-pocket cargo trouser, heavyweight cotton.",
+    colors: [
+      { name: "Corail", nameEn: "Coral", image: "products/image_481c636c-b4d9-49a7-ac5f-47e625f3337a.jpg" },
+      { name: "Vert Mer", nameEn: "Sea Green", image: "products/image_629f40da-9531-4c96-b31f-047870967547.jpg" },
+      { name: "Kaki Militaire", nameEn: "Olive Green 1590", image: "products/image_bf6e71a6-91d0-48f1-aad6-9ba7308e381c.jpg" },
+      { name: "Gris Foncé", nameEn: "Dark Grey", image: "products/image_e9c3f1b0-a252-401d-8424-0a66b89434a9.jpg" },
+      { name: "Anthracite", nameEn: "Charcoal", image: "products/image_d790bf27-2d01-49ac-bbcc-74d25ceddab4.jpg" },
+      { name: "Noir", nameEn: "Black", image: "products/image_a1bce501-2d2a-4e26-b1ee-c3b2d4abd034.jpg" },
+    ],
+  },
+];
+
+for (const group of CARGO_GROUPS) {
+  pushGroupedProduct(group);
+}
+
+const CARGO_RAW_IMPORT: RawImportItem[] = [
+  { title: "Pantalon Cargo Camouflage", titleEn: "Camouflage Cargo Pants", kind: "cargo", priceAED: 55.0, image: "products/IMG-20210602-WA0012.jpg" },
+  { title: "Pantalon Cargo Gris Foncé", titleEn: "Dark Grey Cargo Pants", kind: "cargo", priceAED: 55.0, image: "products/IMG-20210817-WA0460_0854c9f3-8d80-4c5a-8e3f-0854a53b34d2.jpg" },
+];
+
+for (const item of CARGO_RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title}. ${template.fr}`,
+    descriptionEn: `${item.titleEn}. ${template.en}`,
+    images: [imageUrl],
+  });
+}
+
 const REVIEWERS = [
   { name: "Léa M.", email: "lea.m@seed.urbandiscount.local" },
   { name: "Karim B.", email: "karim.b@seed.urbandiscount.local" },
