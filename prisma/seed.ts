@@ -684,7 +684,8 @@ type ProductKind =
   | "jogger"
   | "cargo"
   | "set"
-  | "loafer";
+  | "loafer"
+  | "cap";
 
 const KIND_TEMPLATES: Record<
   ProductKind,
@@ -817,6 +818,14 @@ const KIND_TEMPLATES: Record<
     en: "Natural suede loafer, flexible and lightweight sole.",
     materialFr: "Suède naturel",
     materialEn: "Natural suede",
+  },
+  cap: {
+    category: "accessoires",
+    sizes: ["Unique"],
+    fr: "Casquette structurée, ajustable, pour un look signature au quotidien.",
+    en: "Structured, adjustable cap for a signature everyday look.",
+    materialFr: "Coton, visière rigide",
+    materialEn: "Cotton, stiff brim",
   },
 };
 
@@ -1016,6 +1025,218 @@ for (const item of WOMEN_RAW_IMPORT) {
     descriptionEn: `${item.titleEn.replace(/\s*—\s*\d+$/, "")}. ${template.en}`,
     images: [imageUrl],
   });
+}
+
+// ────────────────────────────────────────────────────────────
+// Import en masse — Casquettes
+// ────────────────────────────────────────────────────────────
+
+const CAPS_RAW_IMPORT: RawImportItem[] = [
+  { title: "Casquette Blaze", titleEn: "Blaze Baseball Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.09.20.jpg" },
+  { title: "Casquette Trucker Create", titleEn: "Create Trucker Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.17.30.jpg" },
+  { title: "Casquette Trucker AL0", titleEn: "AL0 Trucker Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.08.37.jpg" },
+  { title: "Casquette Bicolore AL0", titleEn: "AL0 Two Tone Baseball Cap", kind: "cap", priceAED: 85.0, image: "files/WhatsAppImage2026-06-23at16.17.19_1.jpg" },
+  { title: "Casquette AL0", titleEn: "AL0 Baseball Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.17.34_1.jpg" },
+  { title: "Casquette LP", titleEn: "LP Baseball Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.05.36.jpg" },
+  { title: "Casquette Bicolore NY", titleEn: "NY Two Tone Baseball Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.09.15.jpg" },
+  { title: "Casquette Basique NY", titleEn: "NY Basic Baseball Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.09.08_1.jpg" },
+  { title: "Casquette Trucker Crocodile", titleEn: "Crocodile Trucker Caps", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.17.14_2.jpg" },
+  { title: "Casquette Trucker BA", titleEn: "BA Trucker Caps", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.11.38_1.jpg" },
+  { title: "Casquette Trucker Lakers", titleEn: "Lakers Trucker Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.17.12_1.jpg" },
+  { title: "Casquette Trucker TH", titleEn: "TH Trucker Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.11.37.jpg" },
+  { title: "Casquette Trucker Crown", titleEn: "Crown Trucker Cap", kind: "cap", priceAED: 75.0, image: "files/WhatsAppImage2026-06-23at16.11.43.jpg" },
+];
+
+for (const item of CAPS_RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title}. ${template.fr}`,
+    descriptionEn: `${item.titleEn}. ${template.en}`,
+    images: [imageUrl],
+  });
+}
+
+// ────────────────────────────────────────────────────────────
+// Import en masse — produits regroupés par couleur
+// ────────────────────────────────────────────────────────────
+
+const COLOR_HEX: Record<string, string> = {
+  Blue: "#2E4C7A",
+  "Navy Blue": "#1B2A4A",
+  Black: "#111111",
+  White: "#F5F5F5",
+  Grey: "#6B7280",
+  "Dark Grey": "#4B4B4B",
+  Beige: "#D8C9AE",
+  Ivory: "#EDE6D6",
+  "Sea Green": "#2E8B57",
+  Green: "#4B5320",
+  Mustard: "#C2A020",
+};
+
+type ColorVariantGroup = {
+  name: string;
+  nameEn: string;
+  kind: ProductKind;
+  priceAED: number;
+  descriptionFr: string;
+  descriptionEn: string;
+  colors: { name: string; nameEn: string; image: string }[];
+};
+
+function pushGroupedProduct(group: ColorVariantGroup) {
+  const template = KIND_TEMPLATES[group.kind];
+  const basePrice = toEuroPrice(group.priceAED);
+
+  let slug = slugify(group.nameEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(group.nameEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  PRODUCTS.push({
+    name: group.name,
+    nameEn: group.nameEn,
+    slug,
+    category: template.category,
+    collections: ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    isNewArrival: true,
+    sizes: template.sizes,
+    colors: group.colors.map((c) => ({ name: c.name, hex: COLOR_HEX[c.name] ?? "#999999" })),
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: group.descriptionFr,
+    descriptionEn: group.descriptionEn,
+    images: [`https://cdn.shopify.com/s/files/1/0840/1390/8249/files/${group.colors[0]!.image}`],
+  });
+}
+
+const TEE_GROUPS: ColorVariantGroup[] = [
+  {
+    name: "T-Shirt Simpson At Work",
+    nameEn: "Simpson At Work T-Shirt",
+    kind: "tee",
+    priceAED: 45.0,
+    descriptionFr: "T-shirt coupe slim imprimé Simpson At Work, coton doux.",
+    descriptionEn: "Slim-fit Simpson At Work printed t-shirt, soft cotton.",
+    colors: [
+      { name: "Blue", nameEn: "Blue", image: "731.jpg" },
+      { name: "Black", nameEn: "Black", image: "730.jpg" },
+      { name: "White", nameEn: "White", image: "723.jpg" },
+    ],
+  },
+  {
+    name: "T-Shirt Mickey Homme",
+    nameEn: "Mickey Men's T-Shirt",
+    kind: "tee",
+    priceAED: 55.0,
+    descriptionFr: "T-shirt coupe slim imprimé Mickey, coton doux.",
+    descriptionEn: "Slim-fit Mickey printed t-shirt, soft cotton.",
+    colors: [
+      { name: "Grey", nameEn: "Grey", image: "726.jpg" },
+      { name: "Black", nameEn: "Black", image: "725.jpg" },
+      { name: "White", nameEn: "White", image: "724.jpg" },
+      { name: "Blue", nameEn: "Blue", image: "722.jpg" },
+    ],
+  },
+  {
+    name: "T-Shirt Rayé Poche Plaquée",
+    nameEn: "Striped Pocket T-Shirt",
+    kind: "tee",
+    priceAED: 65.0,
+    descriptionFr: "T-shirt rayé avec poche plaquée, coton peigné.",
+    descriptionEn: "Striped t-shirt with patch pocket, combed cotton.",
+    colors: [
+      { name: "White", nameEn: "Navy White", image: "636.jpg" },
+      { name: "Ivory", nameEn: "Navy Ivory", image: "beige_ba5c1e64-b8ff-4073-8fa7-39484d087fd4.jpg" },
+      { name: "Blue", nameEn: "Navy Blue", image: "633.jpg" },
+    ],
+  },
+  {
+    name: "T-Shirt Character Oversize",
+    nameEn: "Character Tee Oversize",
+    kind: "tee",
+    priceAED: 85.0,
+    descriptionFr: "T-shirt oversize imprimé character, coton lourd.",
+    descriptionEn: "Oversize character-print t-shirt, heavyweight cotton.",
+    colors: [
+      { name: "Dark Grey", nameEn: "Dark Grey", image: "510.jpg" },
+      { name: "Beige", nameEn: "Beige", image: "508.jpg" },
+    ],
+  },
+  {
+    name: "T-Shirt Tupac Oversize",
+    nameEn: "Tupac Tee Oversize",
+    kind: "tee",
+    priceAED: 85.0,
+    descriptionFr: "T-shirt oversize imprimé Tupac, coton lourd.",
+    descriptionEn: "Oversize Tupac-print t-shirt, heavyweight cotton.",
+    colors: [
+      { name: "Black", nameEn: "Black", image: "505.jpg" },
+      { name: "Sea Green", nameEn: "Sea Green", image: "503a.jpg" },
+    ],
+  },
+  {
+    name: "T-Shirt Varsity Imprimé",
+    nameEn: "Varsity Print T-Shirt",
+    kind: "tee",
+    priceAED: 45.0,
+    descriptionFr: "T-shirt coupe slim imprimé varsity, coton doux.",
+    descriptionEn: "Slim-fit varsity print t-shirt, soft cotton.",
+    colors: [
+      { name: "White", nameEn: "White", image: "0842.jpg" },
+      { name: "Mustard", nameEn: "Mustard", image: "0837.jpg" },
+      { name: "Green", nameEn: "Green", image: "0835.jpg" },
+    ],
+  },
+  {
+    name: "T-Shirt Varsity",
+    nameEn: "Varsity T-Shirt",
+    kind: "tee",
+    priceAED: 45.0,
+    descriptionFr: "T-shirt coupe slim varsity, coton doux.",
+    descriptionEn: "Slim-fit varsity t-shirt, soft cotton.",
+    colors: [
+      { name: "Navy Blue", nameEn: "Navy Blue", image: "0840.jpg" },
+      { name: "Black", nameEn: "Black", image: "0836.jpg" },
+      { name: "Blue", nameEn: "Blue", image: "0833.jpg" },
+    ],
+  },
+];
+
+for (const group of TEE_GROUPS) {
+  pushGroupedProduct(group);
 }
 
 const REVIEWERS = [
