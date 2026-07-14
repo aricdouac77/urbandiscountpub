@@ -1634,6 +1634,68 @@ for (const item of CARGO_RAW_IMPORT) {
   });
 }
 
+const COTTON_JOGGER_GROUP: ColorVariantGroup = {
+  name: "Jogger en Coton",
+  nameEn: "Cotton Jogger Pant",
+  kind: "jogger",
+  priceAED: 55.0,
+  descriptionFr: "Jogger en coton doux, coupe fuselée, taille élastiquée et poches zippées.",
+  descriptionEn: "Soft cotton jogger, tapered fit, elastic waistband and zip pockets.",
+  colors: [
+    { name: "Gris", nameEn: "Grey", image: "products/2161.jpg" },
+    { name: "Vert", nameEn: "Green", image: "products/2134_6b5f5100-b01c-42ef-a3cf-a659ef9410c4.jpg" },
+    { name: "Anthracite", nameEn: "Dark Grey", image: "products/2158.jpg" },
+    { name: "Camel", nameEn: "Camel", image: "products/2160.jpg" },
+    { name: "Bleu", nameEn: "Blue", image: "products/2156.jpg" },
+    { name: "Noir", nameEn: "Black", image: "products/2154.jpg" },
+    { name: "Beige", nameEn: "Beige", image: "products/2159.jpg" },
+  ],
+};
+
+pushGroupedProduct(COTTON_JOGGER_GROUP);
+
+const JOGGER_RAW_IMPORT: RawImportItem[] = [
+  { title: "Jogger Camouflage", titleEn: "Camouflage Cotton Jogger Pant", kind: "jogger", priceAED: 59.0, image: "products/2133.jpg" },
+  { title: "Pantalon Jogger Camouflage", titleEn: "Jogger Trousers - Camouflage", kind: "jogger", priceAED: 75.0, image: "products/IMG-20210927-WA0175.jpg" },
+  { title: "Jogger Imprimé", titleEn: "Patterned Jogger Trouser", kind: "jogger", priceAED: 85.0, image: "products/c_1.jpg" },
+];
+
+for (const item of JOGGER_RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title}. ${template.fr}`,
+    descriptionEn: `${item.titleEn}. ${template.en}`,
+    images: [imageUrl],
+  });
+}
+
 const REVIEWERS = [
   { name: "Léa M.", email: "lea.m@seed.urbandiscount.local" },
   { name: "Karim B.", email: "karim.b@seed.urbandiscount.local" },
