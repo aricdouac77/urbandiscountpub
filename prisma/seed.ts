@@ -1756,6 +1756,72 @@ for (const item of SWEAT_RAW_IMPORT) {
   });
 }
 
+const HAWAII_GROUP: ColorVariantGroup = {
+  name: "Ensemble Hawaï Classique Culturel",
+  nameEn: "Cultural Classic Hawaii Set",
+  kind: "set",
+  priceAED: 65.0,
+  descriptionFr: "Ensemble chemise Hawaï imprimée et short assorti, coton léger.",
+  descriptionEn: "Printed Hawaii shirt and matching shorts set, lightweight cotton.",
+  colors: [
+    { name: "Violet", nameEn: "Purple", image: "products/243303029_3412077425679386_9038564038076602378_n.jpg" },
+    { name: "Noir", nameEn: "Black", image: "products/prse31.jpg" },
+    { name: "Vert", nameEn: "Green", image: "products/prse15.jpg" },
+  ],
+};
+
+pushGroupedProduct(HAWAII_GROUP);
+
+const PRINTED_SET_RAW_IMPORT: RawImportItem[] = [
+  { title: "Ensemble Hawaï Fleurs Néon", titleEn: "Neon Floral Hawaii Sets", kind: "set", priceAED: 65.0, image: "products/243457413_3412077319012730_317772392297939407_n.jpg" },
+  { title: "Ensemble Imprimé PRSE12", titleEn: "Printed Sets - PRSE12", kind: "set", priceAED: 65.0, image: "products/243321558_3412077139012748_732265510865255146_n.jpg" },
+  { title: "Ensemble Hawaï Fissures & Labyrinthe", titleEn: "Cracks & Maze Hawaii Sets", kind: "set", priceAED: 65.0, image: "products/243345699_3412076912346104_1967063799355053936_n.jpg" },
+  { title: "Ensemble Hawaï Rayures Diagonales", titleEn: "Diagonal Stripes Hawaii Sets", kind: "set", priceAED: 65.0, image: "products/IMG-20210923-WA0124.jpg" },
+  { title: "Ensemble Hawaï Ligne Designer", titleEn: "The Designer Line Hawaii Set", kind: "set", priceAED: 65.0, image: "products/prse28.jpg" },
+  { title: "Ensemble Imprimé PRSE29", titleEn: "Printed Sets - PRSE29", kind: "set", priceAED: 65.0, image: "products/printedhawaiishirtset.jpg" },
+  { title: "Ensemble Hawaï Art Encre", titleEn: "The Ink Art Hawaii Set", kind: "set", priceAED: 65.0, image: "products/243020358_3412076755679453_83449947228700269_n.jpg" },
+  { title: "Ensemble Hawaï Couleurs Coucher de Soleil", titleEn: "Sunset Colors Hawaii Sets", kind: "set", priceAED: 65.0, image: "products/243198538_3412077375679391_9009091668914281210_n.jpg" },
+  { title: "Ensemble Imprimé PRSE18", titleEn: "Printed Sets - PRSE18", kind: "set", priceAED: 65.0, image: "products/243263976_3412076619012800_6416204360608969007_n.jpg" },
+  { title: "Ensemble Hawaï Collage", titleEn: "The Collage Hawaii Set", kind: "set", priceAED: 65.0, image: "products/243870713_3412076855679443_7756958052800576768_n.jpg" },
+  { title: "Ensemble Imprimé PRSE11", titleEn: "Printed Sets - PRSE11", kind: "set", priceAED: 65.0, image: "products/243653334_3412077085679420_1300732091759527472_n.jpg" },
+];
+
+for (const item of PRINTED_SET_RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title}. ${template.fr}`,
+    descriptionEn: `${item.titleEn}. ${template.en}`,
+    images: [imageUrl],
+  });
+}
+
 const REVIEWERS = [
   { name: "Léa M.", email: "lea.m@seed.urbandiscount.local" },
   { name: "Karim B.", email: "karim.b@seed.urbandiscount.local" },
