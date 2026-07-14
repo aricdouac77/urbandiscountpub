@@ -567,9 +567,9 @@ export function CheckoutForm() {
           items={items}
           subtotal={totals.subtotal}
           discount={totals.discount}
-          shipping={totals.shipping}
-          total={totals.total}
-          freeShipping={totals.freeShipping}
+          shipping={displayShipping}
+          total={displayTotal}
+          freeShipping={displayFreeShipping}
         />
       </div>
     </div>
