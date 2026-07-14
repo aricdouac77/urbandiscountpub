@@ -6,7 +6,7 @@ import { useRouter } from "@/i18n/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { ChevronDown, CreditCard, Lock, RotateCcw, ShieldCheck, Truck } from "lucide-react";
+import { CheckCircle2, ChevronDown, Lock, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,8 +21,10 @@ import {
 import { createOrder } from "@/actions/checkout.actions";
 import { computeCartTotals, useCartStore } from "@/features/cart/store/cart-store";
 import { CheckoutOrderSummary } from "@/features/checkout/components/checkout-order-summary";
+import { CardBrandBadge } from "@/features/checkout/components/card-brand-badge";
 import { StripePaymentForm } from "@/features/checkout/components/stripe-payment-form";
 import { formatPrice } from "@/lib/currency";
+import { cvvLength, formatCardNumber, formatExpiry, luhnCheck } from "@/lib/card";
 import type { Locale } from "@/i18n/routing";
 import {
   shippingAddressSchema,
@@ -122,7 +124,13 @@ export function CheckoutForm() {
   }
 
   const totals = computeCartTotals(items, coupon);
-  const displayTotal = totals.total + (shippingMethod === "express" ? EXPRESS_SHIPPING_SURCHARGE : 0);
+  const isExpress = shippingMethod === "express";
+  const displayShipping = isExpress ? totals.shipping + EXPRESS_SHIPPING_SURCHARGE : totals.shipping;
+  const displayFreeShipping = !isExpress && totals.freeShipping;
+  const displayTotal = totals.total + (isExpress ? EXPRESS_SHIPPING_SURCHARGE : 0);
+
+  const { brand: cardBrand, digits: cardDigits } = formatCardNumber(testCard.cardNumber);
+  const isCardNumberValid = luhnCheck(cardDigits);
 
   return (
     <div className="grid gap-10 lg:grid-cols-3">
@@ -155,9 +163,9 @@ export function CheckoutForm() {
                   items={items}
                   subtotal={totals.subtotal}
                   discount={totals.discount}
-                  shipping={totals.shipping}
-                  total={totals.total}
-                  freeShipping={totals.freeShipping}
+                  shipping={displayShipping}
+                  total={displayTotal}
+                  freeShipping={displayFreeShipping}
                 />
               </div>
             )}
@@ -404,20 +412,27 @@ export function CheckoutForm() {
                         className="accent-brand size-4"
                       />
                       <span className="flex-1 text-sm font-medium">{t("creditCard")}</span>
-                      <CreditCard className="text-muted-foreground size-5" />
+                      <CardBrandBadge brand={cardBrand} />
                     </div>
                     <div className="space-y-3 p-4">
                       <div className="space-y-1.5">
                         <label className="text-sm font-medium">{t("cardNumber")}</label>
-                        <Input
-                          placeholder="4242 4242 4242 4242"
-                          autoComplete="off"
-                          inputMode="numeric"
-                          value={testCard.cardNumber}
-                          onChange={(e) =>
-                            setTestCard((prev) => ({ ...prev, cardNumber: e.target.value }))
-                          }
-                        />
+                        <div className="relative">
+                          <Input
+                            placeholder="4242 4242 4242 4242"
+                            autoComplete="off"
+                            inputMode="numeric"
+                            className="pr-10"
+                            value={testCard.cardNumber}
+                            onChange={(e) => {
+                              const { formatted } = formatCardNumber(e.target.value);
+                              setTestCard((prev) => ({ ...prev, cardNumber: formatted }));
+                            }}
+                          />
+                          {isCardNumberValid && (
+                            <CheckCircle2 className="absolute top-1/2 right-3 size-4 -translate-y-1/2 text-emerald-600" />
+                          )}
+                        </div>
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-sm font-medium">{t("cardholderName")}</label>
@@ -425,7 +440,10 @@ export function CheckoutForm() {
                           autoComplete="off"
                           value={testCard.cardholderName}
                           onChange={(e) =>
-                            setTestCard((prev) => ({ ...prev, cardholderName: e.target.value }))
+                            setTestCard((prev) => ({
+                              ...prev,
+                              cardholderName: e.target.value.toUpperCase(),
+                            }))
                           }
                         />
                       </div>
@@ -435,22 +453,29 @@ export function CheckoutForm() {
                           <Input
                             placeholder="MM/AA"
                             autoComplete="off"
+                            inputMode="numeric"
                             value={testCard.expiry}
                             onChange={(e) =>
-                              setTestCard((prev) => ({ ...prev, expiry: e.target.value }))
+                              setTestCard((prev) => ({
+                                ...prev,
+                                expiry: formatExpiry(e.target.value),
+                              }))
                             }
                           />
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-sm font-medium">{t("cvv")}</label>
                           <Input
-                            placeholder="CVV"
+                            placeholder={cardBrand === "amex" ? "CVV" : "CVC"}
                             autoComplete="off"
                             inputMode="numeric"
                             value={testCard.cvv}
-                            onChange={(e) =>
-                              setTestCard((prev) => ({ ...prev, cvv: e.target.value }))
-                            }
+                            onChange={(e) => {
+                              const digits = e.target.value
+                                .replace(/\D/g, "")
+                                .slice(0, cvvLength(cardBrand));
+                              setTestCard((prev) => ({ ...prev, cvv: digits }));
+                            }}
                           />
                         </div>
                       </div>
