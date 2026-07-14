@@ -965,6 +965,59 @@ for (const item of RAW_IMPORT) {
   });
 }
 
+// ────────────────────────────────────────────────────────────
+// Import en masse — collection "Femme"
+// ────────────────────────────────────────────────────────────
+
+const WOMEN_RAW_IMPORT: RawImportItem[] = [
+  { title: "Mocassin Suédine Charme d'Été — Old Money", titleEn: "Women Summer Charm Suede Loafers — Old Money Collection", kind: "loafer", priceAED: 145.0, image: "files/cover_1f8ed232-c2cb-4881-9192-d79ee2567d41.jpg" },
+  { title: "Mocassin Slip-on en Suède — Old Money", titleEn: "Women Slip-on Loafers in Suede — Old Money Collection", kind: "loafer", priceAED: 145.0, image: "files/jenneb_ua_1781983923_3923887959404434728_47968264684_1.jpg" },
+  { title: "Mocassin Lady Old Money en Suède", titleEn: "Old Money Suede Lady Loafers", kind: "loafer", priceAED: 145.0, image: "files/coverbrown.png" },
+  { title: "Pantalon Gaufré Été", titleEn: "Waffle Summer Trousers", kind: "chino-pant", priceAED: 41.0, image: "files/teapink.jpg" },
+  { title: "Ensemble Caviar", titleEn: "Women Caviar Co-ord Set", kind: "set", priceAED: 55.0, discountPct: 40, image: "files/ScreenShot2026-05-05at7.04.06PM.png" },
+  { title: "Ensemble Twilight", titleEn: "Women Twilight Co-ord Set", kind: "set", priceAED: 36.0, discountPct: 70, image: "files/blue_fd85c42f-582c-4fcb-96e4-9993e9c55d65.jpg" },
+  { title: "Ensemble Fleuri Manches 3/4", titleEn: "Flower Quarter Sleeved Set", kind: "set", priceAED: 36.0, discountPct: 70, image: "files/582b_7318fc7e-ab85-4d65-9b90-77207dacea33.jpg" },
+  { title: "Hoodie Mickey Blanc", titleEn: "Mickey Hoodie White", kind: "hoodie", priceAED: 58.0, discountPct: 40, image: "files/WhatsAppImage2022-01-26at6.45.42PM_2.jpg" },
+  { title: "Ensemble Tee Smiley & Palazzo", titleEn: "Smiley Tee & Palazzo", kind: "set", priceAED: 49.0, discountPct: 50, image: "files/592.jpg" },
+  { title: "Ensemble Loungewear", titleEn: "Women Lounge Wear Co-ord", kind: "set", priceAED: 85.0, image: "files/Aqua_Pink.jpg" },
+];
+
+for (const item of WOMEN_RAW_IMPORT) {
+  const template = KIND_TEMPLATES[item.kind];
+  const basePrice = toEuroPrice(item.priceAED);
+  const compareAtPrice = item.discountPct
+    ? Math.round((basePrice / (1 - item.discountPct / 100)) * 10) / 10
+    : undefined;
+
+  let slug = slugify(item.titleEn);
+  let suffix = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${slugify(item.titleEn)}-${suffix}`;
+    suffix += 1;
+  }
+  usedSlugs.add(slug);
+
+  const imageUrl = `https://cdn.shopify.com/s/files/1/0840/1390/8249/${item.image}`;
+
+  PRODUCTS.push({
+    name: item.title,
+    nameEn: item.titleEn,
+    slug,
+    category: template.category,
+    collections: item.discountPct ? ["soldes"] : ["nouveautes"],
+    brand: "UrbanDiscount Label",
+    basePrice,
+    compareAtPrice,
+    isNewArrival: !item.discountPct,
+    sizes: template.sizes,
+    materials: template.materialFr,
+    materialsEn: template.materialEn,
+    description: `${item.title.replace(/\s*—\s*\d+$/, "")}. ${template.fr}`,
+    descriptionEn: `${item.titleEn.replace(/\s*—\s*\d+$/, "")}. ${template.en}`,
+    images: [imageUrl],
+  });
+}
+
 const REVIEWERS = [
   { name: "Léa M.", email: "lea.m@seed.urbandiscount.local" },
   { name: "Karim B.", email: "karim.b@seed.urbandiscount.local" },
