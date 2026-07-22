@@ -24,7 +24,7 @@ const DEFAULT_VALUES: ProductFormValues = {
   materials: "",
   careInstructions: "",
   videoUrl: "",
-  variants: [{ sku: "", size: "", stock: 0, isDefault: true }],
+  variants: [{ sku: "", size: "", size2: "", color: "", colorHex: "", stock: 0, isDefault: true }],
   images: [],
 };
 

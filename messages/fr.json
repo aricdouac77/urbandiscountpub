@@ -296,6 +296,8 @@
     "materials": "Matières",
     "careInstructions": "Entretien",
     "size": "Taille",
+    "sizeTop": "Taille (haut)",
+    "sizeBottom": "Taille (bas)",
     "color": "Couleur",
     "outOfStock": "Rupture de stock",
     "addToCart": "Ajouter au panier",

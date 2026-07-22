@@ -4,6 +4,7 @@ export const productVariantSchema = z.object({
   id: z.string().optional(),
   sku: z.string().trim().min(1, "SKU requis"),
   size: z.string().trim().optional().or(z.literal("")),
+  size2: z.string().trim().optional().or(z.literal("")),
   color: z.string().trim().optional().or(z.literal("")),
   colorHex: z.string().trim().optional().or(z.literal("")),
   stock: z.coerce.number().int().min(0),

@@ -67,6 +67,7 @@ export const getProductBySlug = unstable_cache(
         id: variant.id,
         sku: variant.sku,
         size: variant.size,
+        size2: variant.size2,
         color: variant.color,
         colorHex: variant.colorHex,
         stock: variant.stock,

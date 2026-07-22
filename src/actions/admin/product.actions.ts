@@ -101,6 +101,7 @@ export async function createProduct(input: ProductInput): Promise<ActionResult &
         create: data.variants.map((v) => ({
           sku: v.sku,
           size: v.size || null,
+          size2: v.size2 || null,
           color: v.color || null,
           colorHex: v.colorHex || null,
           stock: v.stock,
@@ -190,6 +191,7 @@ export async function updateProduct(id: string, input: ProductInput): Promise<Ac
             data: {
               sku: v.sku,
               size: v.size || null,
+              size2: v.size2 || null,
               color: v.color || null,
               colorHex: v.colorHex || null,
               stock: v.stock,
@@ -201,6 +203,7 @@ export async function updateProduct(id: string, input: ProductInput): Promise<Ac
               productId: id,
               sku: v.sku,
               size: v.size || null,
+              size2: v.size2 || null,
               color: v.color || null,
               colorHex: v.colorHex || null,
               stock: v.stock,

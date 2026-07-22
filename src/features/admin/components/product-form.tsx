@@ -383,7 +383,15 @@ export function ProductForm({
               variant="outline"
               size="sm"
               onClick={() =>
-                variantFields.append({ sku: "", size: "", stock: 0, isDefault: false })
+                variantFields.append({
+                  sku: "",
+                  size: "",
+                  size2: "",
+                  color: "",
+                  colorHex: "",
+                  stock: 0,
+                  isDefault: false,
+                })
               }
             >
               <Plus className="size-4" />
@@ -392,59 +400,118 @@ export function ProductForm({
           </CardHeader>
           <CardContent className="space-y-4">
             {variantFields.fields.map((variantField, index) => (
-              <div
-                key={variantField.id}
-                className="grid grid-cols-12 items-end gap-3 border-b pb-4"
-              >
-                <FormField
-                  control={form.control}
-                  name={`variants.${index}.sku`}
-                  render={({ field }) => (
-                    <FormItem className="col-span-4">
-                      <FormLabel>SKU</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={`variants.${index}.size`}
-                  render={({ field }) => (
-                    <FormItem className="col-span-3">
-                      <FormLabel>Taille</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={`variants.${index}.stock`}
-                  render={({ field }) => (
-                    <FormItem className="col-span-3">
-                      <FormLabel>Stock</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} value={field.value as number} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="col-span-2"
-                  onClick={() => variantFields.remove(index)}
-                  aria-label="Supprimer la variante"
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+              <div key={variantField.id} className="space-y-3 border-b pb-4">
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-6">
+                  <FormField
+                    control={form.control}
+                    name={`variants.${index}.sku`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>SKU</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`variants.${index}.size`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Taille (haut)</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`variants.${index}.size2`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Taille (bas, optionnel)</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Pour les ensembles" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`variants.${index}.color`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Couleur</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Ex: Blanc" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`variants.${index}.colorHex`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Couleur (nuance)</FormLabel>
+                        <FormControl>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="color"
+                              className="h-9 w-10 shrink-0 p-1"
+                              value={field.value || "#999999"}
+                              onChange={(e) => field.onChange(e.target.value)}
+                            />
+                            <Input {...field} placeholder="#FFFFFF" className="min-w-0" />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`variants.${index}.stock`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Stock</FormLabel>
+                        <FormControl>
+                          <Input type="number" {...field} value={field.value as number} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <FormField
+                    control={form.control}
+                    name={`variants.${index}.isDefault`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center gap-2">
+                        <FormControl>
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                        </FormControl>
+                        <FormLabel className="font-normal">Variante par défaut</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => variantFields.remove(index)}
+                    aria-label="Supprimer la variante"
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
               </div>
             ))}
             {form.formState.errors.variants?.root && (
@@ -459,9 +526,7 @@ export function ProductForm({
           <CardHeader className="flex-row items-center justify-between">
             <CardTitle className="text-base font-medium">Images</CardTitle>
             <div className="flex items-center gap-2">
-              <ImageUploadButton
-                onUploaded={(url) => imageFields.append({ url, alt: "" })}
-              />
+              <ImageUploadButton onUploaded={(url) => imageFields.append({ url, alt: "" })} />
               <Button
                 type="button"
                 variant="outline"

@@ -49,6 +49,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
       id: v.id,
       sku: v.sku,
       size: v.size ?? "",
+      size2: v.size2 ?? "",
       color: v.color ?? "",
       colorHex: v.colorHex ?? "",
       stock: v.stock,

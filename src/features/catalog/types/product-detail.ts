@@ -2,6 +2,7 @@ export type ProductVariantData = {
   id: string;
   sku: string;
   size: string | null;
+  size2: string | null;
   color: string | null;
   colorHex: string | null;
   stock: number;

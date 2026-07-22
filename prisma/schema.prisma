@@ -248,6 +248,8 @@ model ProductVariant {
   id          String   @id @default(cuid())
   sku         String   @unique
   size        String?
+  /// Second garment size for multi-piece products (e.g. pants size in a shirt+pants set).
+  size2       String?
   color       String?
   colorHex    String?
   price       Decimal? @db.Decimal(10, 2)

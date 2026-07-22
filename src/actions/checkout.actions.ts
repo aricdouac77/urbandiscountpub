@@ -63,7 +63,8 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
       productId: variant.productId,
       variantId: variant.id,
       productName: variant.product.name,
-      variantLabel: variant.size ?? variant.color ?? undefined,
+      variantLabel:
+        [variant.size, variant.size2].filter(Boolean).join(" / ") || variant.color || undefined,
       sku: variant.sku,
       unitPrice,
       quantity: item.quantity,

@@ -42,6 +42,7 @@ export function AddToCartForm({
 
   const { selectedColor, setSelectedColor } = useProductColor();
   const [selectedSize, setSelectedSize] = useState<string | null>(defaultVariant?.size ?? null);
+  const [selectedSize2, setSelectedSize2] = useState<string | null>(defaultVariant?.size2 ?? null);
   const [quantity, setQuantity] = useState(1);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
@@ -49,15 +50,41 @@ export function AddToCartForm({
   const router = useRouter();
   const t = useTranslations("product");
 
-  const sizeVariants = useMemo(
+  const hasSize2 = variants.some((v) => v.size2);
+
+  const colorVariants = useMemo(
     () => (selectedColor ? variants.filter((v) => v.color === selectedColor) : variants),
     [variants, selectedColor],
   );
 
-  const selectedVariant = useMemo(
-    () => sizeVariants.find((v) => v.size === selectedSize) ?? sizeVariants[0] ?? null,
-    [sizeVariants, selectedSize],
-  );
+  const sizeVariants = useMemo(() => {
+    const seen = new Set<string>();
+    return colorVariants.filter((v) => {
+      if (!v.size || seen.has(v.size)) return false;
+      seen.add(v.size);
+      return true;
+    });
+  }, [colorVariants]);
+
+  const size2Variants = useMemo(() => {
+    if (!hasSize2) return [];
+    const forSize = selectedSize
+      ? colorVariants.filter((v) => v.size === selectedSize)
+      : colorVariants;
+    const seen = new Set<string>();
+    return forSize.filter((v) => {
+      if (!v.size2 || seen.has(v.size2)) return false;
+      seen.add(v.size2);
+      return true;
+    });
+  }, [colorVariants, selectedSize, hasSize2]);
+
+  const selectedVariant = useMemo(() => {
+    const match = colorVariants.find(
+      (v) => v.size === selectedSize && (!hasSize2 || v.size2 === selectedSize2),
+    );
+    return match ?? colorVariants[0] ?? null;
+  }, [colorVariants, selectedSize, selectedSize2, hasSize2]);
 
   const hasSizes = variants.some((v) => v.size && v.size !== "Unique");
   const outOfStock = selectedVariant ? selectedVariant.stock <= 0 : false;
@@ -67,11 +94,34 @@ export function AddToCartForm({
 
   function handleSelectColor(colorName: string) {
     setSelectedColor(colorName);
-    const stillAvailable = variants.find((v) => v.color === colorName && v.size === selectedSize);
+    const stillAvailable = variants.find(
+      (v) =>
+        v.color === colorName &&
+        v.size === selectedSize &&
+        (!hasSize2 || v.size2 === selectedSize2),
+    );
     if (!stillAvailable) {
       const firstForColor = variants.find((v) => v.color === colorName);
       setSelectedSize(firstForColor?.size ?? null);
+      setSelectedSize2(firstForColor?.size2 ?? null);
     }
+  }
+
+  function handleSelectSize(size: string) {
+    setSelectedSize(size);
+    if (hasSize2) {
+      const stillAvailable = colorVariants.find(
+        (v) => v.size === size && v.size2 === selectedSize2,
+      );
+      if (!stillAvailable) {
+        const firstForSize = colorVariants.find((v) => v.size === size);
+        setSelectedSize2(firstForSize?.size2 ?? null);
+      }
+    }
+  }
+
+  function variantSizeLabel(variant: ProductVariantData) {
+    return variant.size2 ? `${variant.size} / ${variant.size2}` : variant.size;
   }
 
   function handleAddToCart() {
@@ -85,7 +135,7 @@ export function AddToCartForm({
         name,
         imageUrl,
         price,
-        size: selectedVariant.size,
+        size: variantSizeLabel(selectedVariant),
       },
       quantity,
     );
@@ -105,7 +155,7 @@ export function AddToCartForm({
         name,
         imageUrl,
         price,
-        size: selectedVariant.size,
+        size: variantSizeLabel(selectedVariant),
       },
       quantity,
     );
@@ -143,23 +193,51 @@ export function AddToCartForm({
 
       {hasSizes && (
         <div>
-          <p className="mb-2 text-sm font-medium">{t("size")}</p>
+          <p className="mb-2 text-sm font-medium">{hasSize2 ? t("sizeTop") : t("size")}</p>
           <div className="flex flex-wrap gap-2">
-            {sizeVariants.map((variant) => (
+            {sizeVariants.map((variant) => {
+              const sizeInStock = colorVariants.some((v) => v.size === variant.size && v.stock > 0);
+              return (
+                <button
+                  key={variant.id}
+                  type="button"
+                  disabled={!sizeInStock}
+                  onClick={() => handleSelectSize(variant.size!)}
+                  className={cn(
+                    "min-w-11 rounded-md border px-3 py-2 text-sm font-medium transition-colors",
+                    variant.size === selectedSize
+                      ? "border-foreground bg-foreground text-background"
+                      : "hover:border-foreground/50",
+                    !sizeInStock && "cursor-not-allowed line-through opacity-40",
+                  )}
+                >
+                  {variant.size}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {hasSize2 && (
+        <div>
+          <p className="mb-2 text-sm font-medium">{t("sizeBottom")}</p>
+          <div className="flex flex-wrap gap-2">
+            {size2Variants.map((variant) => (
               <button
                 key={variant.id}
                 type="button"
                 disabled={variant.stock <= 0}
-                onClick={() => setSelectedSize(variant.size)}
+                onClick={() => setSelectedSize2(variant.size2)}
                 className={cn(
                   "min-w-11 rounded-md border px-3 py-2 text-sm font-medium transition-colors",
-                  variant.size === selectedSize
+                  variant.size2 === selectedSize2
                     ? "border-foreground bg-foreground text-background"
                     : "hover:border-foreground/50",
                   variant.stock <= 0 && "cursor-not-allowed line-through opacity-40",
                 )}
               >
-                {variant.size}
+                {variant.size2}
               </button>
             ))}
           </div>

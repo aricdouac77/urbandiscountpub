@@ -296,6 +296,8 @@
     "materials": "Materials",
     "careInstructions": "Care instructions",
     "size": "Size",
+    "sizeTop": "Size (top)",
+    "sizeBottom": "Size (bottom)",
     "color": "Color",
     "outOfStock": "Out of stock",
     "addToCart": "Add to cart",
