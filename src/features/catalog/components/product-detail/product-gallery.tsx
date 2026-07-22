@@ -1,22 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { ZoomIn } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { useProductColor } from "@/features/catalog/components/product-detail/product-color-context";
 
 type GalleryImage = { id: string; url: string; alt: string | null };
 
 export function ProductGallery({
-  images,
+  images: baseImages,
   productName,
+  colorImages,
 }: {
   images: GalleryImage[];
   productName: string;
+  colorImages?: Record<string, string>;
 }) {
+  const { selectedColor } = useProductColor();
+
+  const images = useMemo(() => {
+    if (!colorImages) return baseImages;
+    const extra = Object.entries(colorImages)
+      .filter(([, url]) => !baseImages.some((image) => image.url === url))
+      .map(([color, url]) => ({ id: `color-${color}`, url, alt: `${productName} — ${color}` }));
+    return [...baseImages, ...extra];
+  }, [baseImages, colorImages, productName]);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
+  const lastSyncedColor = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!colorImages || !selectedColor || lastSyncedColor.current === selectedColor) return;
+    lastSyncedColor.current = selectedColor;
+    const url = colorImages[selectedColor];
+    if (!url) return;
+    const index = images.findIndex((image) => image.url === url);
+    if (index >= 0) setActiveIndex(index);
+  }, [selectedColor, colorImages, images]);
 
   const activeImage = images[activeIndex] ?? images[0];
 

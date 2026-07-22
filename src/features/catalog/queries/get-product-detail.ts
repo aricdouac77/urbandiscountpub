@@ -12,7 +12,10 @@ export const getProductBySlug = unstable_cache(
       include: {
         category: { select: { slug: true, name: true, nameEn: true } },
         images: { orderBy: { position: "asc" } },
-        variants: { orderBy: { createdAt: "asc" } },
+        variants: {
+          orderBy: { createdAt: "asc" },
+          include: { images: { take: 1 } },
+        },
         reviews: {
           where: { status: "APPROVED" },
           orderBy: { createdAt: "desc" },
@@ -29,6 +32,13 @@ export const getProductBySlug = unstable_cache(
       reviewCount > 0
         ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / reviewCount
         : 0;
+
+    const colorImages: Record<string, string> = {};
+    for (const variant of product.variants) {
+      if (variant.color && variant.images[0] && !colorImages[variant.color]) {
+        colorImages[variant.color] = variant.images[0].url;
+      }
+    }
 
     return {
       id: product.id,
@@ -52,6 +62,7 @@ export const getProductBySlug = unstable_cache(
         ? localize(product.category.name, product.category.nameEn, locale)
         : null,
       images: product.images.map((image) => ({ id: image.id, url: image.url, alt: image.alt })),
+      colorImages,
       variants: product.variants.map((variant) => ({
         id: variant.id,
         sku: variant.sku,

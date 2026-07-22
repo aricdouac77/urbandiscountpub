@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { SiteBreadcrumb } from "@/components/layout/site-breadcrumb";
 import { ProductGallery } from "@/features/catalog/components/product-detail/product-gallery";
 import { AddToCartForm } from "@/features/catalog/components/product-detail/add-to-cart-form";
+import { ProductColorProvider } from "@/features/catalog/components/product-detail/product-color-context";
 import { WishlistButton } from "@/features/wishlist/components/wishlist-button";
 import { ProductInfoAccordion } from "@/features/catalog/components/product-detail/product-info-accordion";
 import { ReviewsSection } from "@/features/catalog/components/product-detail/reviews-section";
@@ -106,71 +107,83 @@ export default async function ProductPage({ params }: ProductPageProps) {
         ]}
       />
 
-      <div className="mt-6 grid gap-10 lg:grid-cols-2">
-        <ProductGallery images={product.images} productName={product.name} />
+      <ProductColorProvider
+        defaultColor={
+          (product.variants.find((v) => v.isDefault) ?? product.variants[0])?.color ?? null
+        }
+      >
+        <div className="mt-6 grid gap-10 lg:grid-cols-2">
+          <ProductGallery
+            images={product.images}
+            productName={product.name}
+            colorImages={product.colorImages}
+          />
 
-        <div>
-          {product.brand && (
-            <p className="text-muted-foreground text-sm tracking-wide uppercase">{product.brand}</p>
-          )}
-          <h1 className="font-heading mt-1 text-3xl font-semibold tracking-tight">
-            {product.name}
-          </h1>
-
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            {product.isNewArrival && (
-              <Badge className="bg-brand text-brand-foreground border-0">{t("new")}</Badge>
+          <div>
+            {product.brand && (
+              <p className="text-muted-foreground text-sm tracking-wide uppercase">
+                {product.brand}
+              </p>
             )}
-            {hasDiscount && (
-              <Badge variant="destructive" className="border-0">
-                {t("sale")}
-              </Badge>
-            )}
-            {product.reviewCount > 0 && (
-              <Link href="#avis" className="flex items-center gap-1 text-sm">
-                <Star className="fill-brand text-brand size-4" />
-                {t("reviewsLink", {
-                  rating: product.averageRating.toFixed(1),
-                  count: product.reviewCount,
-                })}
-              </Link>
-            )}
-          </div>
+            <h1 className="font-heading mt-1 text-3xl font-semibold tracking-tight">
+              {product.name}
+            </h1>
 
-          <div className="mt-4 flex items-baseline gap-3">
-            <span className="text-2xl font-semibold">{formatPrice(product.price, locale)}</span>
-            {hasDiscount && (
-              <span className="text-muted-foreground text-lg line-through">
-                {formatPrice(product.compareAtPrice!, locale)}
-              </span>
-            )}
-          </div>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              {product.isNewArrival && (
+                <Badge className="bg-brand text-brand-foreground border-0">{t("new")}</Badge>
+              )}
+              {hasDiscount && (
+                <Badge variant="destructive" className="border-0">
+                  {t("sale")}
+                </Badge>
+              )}
+              {product.reviewCount > 0 && (
+                <Link href="#avis" className="flex items-center gap-1 text-sm">
+                  <Star className="fill-brand text-brand size-4" />
+                  {t("reviewsLink", {
+                    rating: product.averageRating.toFixed(1),
+                    count: product.reviewCount,
+                  })}
+                </Link>
+              )}
+            </div>
 
-          <div className="mt-8 space-y-3">
-            <AddToCartForm
-              productId={product.id}
-              slug={product.slug}
-              name={product.name}
-              imageUrl={product.images[0]?.url ?? ""}
-              price={product.price}
-              variants={product.variants}
-            />
-            <WishlistButton
-              productId={product.id}
-              variant="inline"
-              className="w-full justify-center"
-            />
-          </div>
+            <div className="mt-4 flex items-baseline gap-3">
+              <span className="text-2xl font-semibold">{formatPrice(product.price, locale)}</span>
+              {hasDiscount && (
+                <span className="text-muted-foreground text-lg line-through">
+                  {formatPrice(product.compareAtPrice!, locale)}
+                </span>
+              )}
+            </div>
 
-          <div className="mt-10">
-            <ProductInfoAccordion
-              description={product.description}
-              materials={product.materials}
-              careInstructions={product.careInstructions}
-            />
+            <div className="mt-8 space-y-3">
+              <AddToCartForm
+                productId={product.id}
+                slug={product.slug}
+                name={product.name}
+                imageUrl={product.images[0]?.url ?? ""}
+                price={product.price}
+                variants={product.variants}
+              />
+              <WishlistButton
+                productId={product.id}
+                variant="inline"
+                className="w-full justify-center"
+              />
+            </div>
+
+            <div className="mt-10">
+              <ProductInfoAccordion
+                description={product.description}
+                materials={product.materials}
+                careInstructions={product.careInstructions}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </ProductColorProvider>
 
       <ProductGridSection title={t("youMayAlsoLike")} products={similarProducts} />
 

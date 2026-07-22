@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
 import { useCartStore } from "@/features/cart/store/cart-store";
+import { useProductColor } from "@/features/catalog/components/product-detail/product-color-context";
 import type { ProductVariantData } from "@/features/catalog/types/product-detail";
 
 type AddToCartFormProps = {
@@ -39,9 +40,7 @@ export function AddToCartForm({
     return Array.from(seen, ([name, hex]) => ({ name, hex }));
   }, [variants]);
 
-  const [selectedColor, setSelectedColor] = useState<string | null>(
-    defaultVariant?.color ?? colors[0]?.name ?? null,
-  );
+  const { selectedColor, setSelectedColor } = useProductColor();
   const [selectedSize, setSelectedSize] = useState<string | null>(defaultVariant?.size ?? null);
   const [quantity, setQuantity] = useState(1);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
@@ -168,9 +167,7 @@ export function AddToCartForm({
       )}
 
       <div>
-        {outOfStock && (
-          <p className="text-destructive text-sm">{t("outOfStockForSize")}</p>
-        )}
+        {outOfStock && <p className="text-destructive text-sm">{t("outOfStockForSize")}</p>}
         {lowStock && (
           <p className="text-brand text-sm">
             {t("lowStock", { count: selectedVariant?.stock ?? 0 })}

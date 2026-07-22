@@ -34,6 +34,7 @@ export type ProductDetailData = {
   categorySlug: string | null;
   categoryName: string | null;
   images: { id: string; url: string; alt: string | null }[];
+  colorImages: Record<string, string>;
   variants: ProductVariantData[];
   reviews: ProductReviewData[];
   averageRating: number;
