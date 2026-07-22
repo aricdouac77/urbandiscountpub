@@ -432,19 +432,18 @@ const PRODUCTS: SeedProduct[] = [
 
   // ── Vêtements / Ensembles ──
   {
-    name: "Ensemble Formel Été Premium",
-    nameEn: "The Summer Formals Men Set — Premium",
+    name: "Ensemble Formel Été Premium — Rose",
+    nameEn: "Summer Formals Premium Set — Pink",
     slug: "ensemble-formel-ete-premium",
     category: "vetements-ensembles",
-    collections: ["nouveautes"],
+    collections: ["nouveautes", "meilleures-ventes", "soldes"],
     brand: "UrbanDiscount Label",
-    basePrice: 134.9,
+    basePrice: 9.99,
+    compareAtPrice: 134.9,
     isNewArrival: true,
+    isBestSeller: true,
+    isFeatured: true,
     sizes: APPAREL_SIZES,
-    colors: [
-      { name: "Blanc", hex: "#F5F5F5" },
-      { name: "Beige", hex: "#D8C9AE" },
-    ],
     materials: "Chemise oxford texturée, pantalon lin-coton",
     materialsEn: "Textured oxford shirt, linen-cotton pants",
     description:
@@ -453,7 +452,51 @@ const PRODUCTS: SeedProduct[] = [
       "Textured oxford shirt paired with linen-cotton pants, cut for the office and formal events alike.",
     images: [
       "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2026-06-05at3.06.05PM_b2845d9d-7791-44fb-9e70-14f4e0171efd.jpg?v=1781776066",
+    ],
+  },
+  {
+    name: "Ensemble Formel Été Premium — Menthe",
+    nameEn: "Summer Formals Premium Set — Mint",
+    slug: "ensemble-formel-ete-premium-menthe",
+    category: "vetements-ensembles",
+    collections: ["nouveautes", "meilleures-ventes", "soldes"],
+    brand: "UrbanDiscount Label",
+    basePrice: 9.99,
+    compareAtPrice: 134.9,
+    isNewArrival: true,
+    isBestSeller: true,
+    isFeatured: true,
+    sizes: APPAREL_SIZES,
+    materials: "Chemise oxford texturée, pantalon lin-coton",
+    materialsEn: "Textured oxford shirt, linen-cotton pants",
+    description:
+      "Ensemble chemise oxford texturée et pantalon en lin-coton, taillé pour le bureau comme les événements formels.",
+    descriptionEn:
+      "Textured oxford shirt paired with linen-cotton pants, cut for the office and formal events alike.",
+    images: [
       "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2026-06-05at3.04.30PM.png?v=1780659511",
+    ],
+  },
+  {
+    name: "Ensemble Formel Été Premium — Bleu Ciel",
+    nameEn: "Summer Formals Premium Set — Sky Blue",
+    slug: "ensemble-formel-ete-premium-bleu-ciel",
+    category: "vetements-ensembles",
+    collections: ["nouveautes", "meilleures-ventes", "soldes"],
+    brand: "UrbanDiscount Label",
+    basePrice: 9.99,
+    compareAtPrice: 134.9,
+    isNewArrival: true,
+    isBestSeller: true,
+    isFeatured: true,
+    sizes: APPAREL_SIZES,
+    materials: "Chemise oxford texturée, pantalon lin-coton",
+    materialsEn: "Textured oxford shirt, linen-cotton pants",
+    description:
+      "Ensemble chemise oxford texturée et pantalon en lin-coton, taillé pour le bureau comme les événements formels.",
+    descriptionEn:
+      "Textured oxford shirt paired with linen-cotton pants, cut for the office and formal events alike.",
+    images: [
       "https://cdn.shopify.com/s/files/1/0840/1390/8249/files/ScreenShot2026-06-05at3.32.18PM.png?v=1780659512",
     ],
   },
